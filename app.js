@@ -1,16 +1,23 @@
-// Prototypepriser. Må kalibreres mot reelle jobber før offentlig lansering.
-const rates={floor:280,remove:140,trim:110,wall:520,panel:390};
-const complexity={open:.9,normal:1,complex:1.2};
-const area=document.querySelector('#area'),price=document.querySelector('#price'),roomType=document.querySelector('#roomType'),estimateNote=document.querySelector('#estimateNote');
-const selectedServices=()=>[...document.querySelectorAll('input[name="service"]:checked')].map(x=>x.value);
-const money=n=>new Intl.NumberFormat('nb-NO',{style:'currency',currency:'NOK',maximumFractionDigits:0}).format(Math.round(n/500)*500);
-function calculate(){const m2=Math.max(0,Number(area.value)||0),selected=selectedServices();if(!m2||!selected.length){price.textContent='Velg arbeid';return null}const priced=selected.filter(x=>x!=='level');let base=priced.reduce((s,k)=>s+(rates[k]||0)*m2,0)*(complexity[roomType.value]||1);base=Math.max(base,priced.length?4500:0);if(!base){price.textContent='Krever vurdering';estimateNote.textContent='Avretting prises etter underlag, høydeforskjell og mengde.';return null}price.textContent=`${money(base*.9)} – ${money(base*1.15)}`;estimateNote.textContent=selected.includes('level')?'inkl. mva. Avretting er ikke med i beløpet og må vurderes separat.':'inkl. mva. Veiledende arbeidsestimat.';return base}
-document.querySelector('#estimateBtn').addEventListener('click',calculate);document.querySelectorAll('#calc input,#calc select').forEach(el=>el.addEventListener('change',calculate));
-const fields=['name','phone','email','postcode','description','timing'],status=document.querySelector('#formStatus'),photos=document.querySelector('#photos'),photoList=document.querySelector('#photoList');
-function getInquiry(){return {...Object.fromEntries(fields.map(id=>[id,document.querySelector(`#${id}`)?.value?.trim()||''])),area:area.value,roomType:roomType.options[roomType.selectedIndex]?.text||'',services:selectedServices(),estimate:price.textContent,consent:document.querySelector('#consent').checked,photoNames:[...photos.files].map(f=>f.name),savedAt:new Date().toISOString()}}
-function saveDraft(show=true){localStorage.setItem('moholdtInquiryDraft',JSON.stringify(getInquiry()));if(show){status.textContent='Utkast lagret på denne enheten.';setTimeout(()=>status.textContent='',3000)}}
-function loadDraft(){try{const d=JSON.parse(localStorage.getItem('moholdtInquiryDraft')||'null');if(!d)return;fields.forEach(id=>{const el=document.querySelector(`#${id}`);if(el&&d[id])el.value=d[id]});if(d.area)area.value=d.area;if(d.consent)document.querySelector('#consent').checked=true}catch(e){console.warn(e)}}
-const label=k=>({floor:'Legge gulv',remove:'Fjerne eksisterende gulv',trim:'Lister og finish',wall:'Gips / veggarbeid',panel:'Smartpanel / himlingspanel',level:'Avretting / vurdering'})[k]||k;
-function summary(){const d=getInquiry();return `Forespørsel – Moholdt Interiør\n\nNavn: ${d.name||'-'}\nTelefon: ${d.phone||'-'}\nE-post: ${d.email||'-'}\nPostnummer: ${d.postcode||'-'}\nTidspunkt: ${d.timing||'-'}\n\nAreal: ${d.area||'-'} m²\nRomtype: ${d.roomType}\nArbeid: ${d.services.map(label).join(', ')||'-'}\nVeiledende estimat: ${d.estimate}\n\nProsjekt:\n${d.description||'-'}\n\nBilder valgt: ${d.photoNames.join(', ')||'Ingen'}`}
-document.querySelector('#saveDraft').addEventListener('click',()=>saveDraft());document.querySelector('#copyInquiry').addEventListener('click',async()=>{if(!document.querySelector('#consent').checked){status.textContent='Kryss av at du forstår at dette er en uforpliktende forespørsel.';return}try{await navigator.clipboard.writeText(summary());status.textContent='Prosjektbeskrivelsen er kopiert.'}catch{window.prompt('Kopier teksten:',summary())}setTimeout(()=>status.textContent='',3000)});
-photos.addEventListener('change',()=>{const f=[...photos.files];photoList.innerHTML=f.length?`<strong>${f.length} bilde${f.length===1?'':'r'} valgt lokalt:</strong>${f.map(x=>`<span>${x.name.replace(/[<>]/g,'')}</span>`).join('')}`:''});document.querySelectorAll('#inquiryForm input,#inquiryForm textarea,#inquiryForm select').forEach(el=>{if(el.type!=='file')el.addEventListener('change',()=>saveDraft(false))});loadDraft();calculate();
+const form=document.querySelector('#requestForm');
+const steps=[...document.querySelectorAll('.wizard-step')];
+const progressBar=document.querySelector('#progressBar');
+const stepLabel=document.querySelector('#stepLabel');
+const photoInput=document.querySelector('#photos');
+const photoList=document.querySelector('#photoList');
+const status=document.querySelector('#formStatus');
+let current=1;
+
+function services(){return [...document.querySelectorAll('input[name="service"]:checked')].map(x=>x.value)}
+function showStep(step){current=step;steps.forEach(s=>s.classList.toggle('active',Number(s.dataset.step)===step));if(step<=4){progressBar.style.width=`${step*25}%`;stepLabel.textContent=`Steg ${step} av 4`;stepLabel.style.display='block'}else{progressBar.style.width='100%';stepLabel.style.display='none'}window.location.hash='foresporsel'}
+function value(id){return document.querySelector(`#${id}`)?.value?.trim()||''}
+function validateStep(){status.textContent='';if(current===1&&!services().length){alert('Velg minst én type arbeid.');return false}if(current===2&&!value('description')){alert('Skriv kort hva du ønsker hjelp med.');return false}if(current===4){if(!value('name')||!value('phone')){status.textContent='Fyll inn navn og telefon.';return false}if(!document.querySelector('#consent').checked){status.textContent='Kryss av at forespørselen er uforpliktende.';return false}}return true}
+function summary(){const s=services();document.querySelector('#summaryBox').innerHTML=`<strong>Oppsummering</strong><span>${s.join(' • ')||'Ingen tjenester valgt'}</span><span>${value('room')||'Rom ikke valgt'}${value('area')?` • ca. ${value('area')} m²`:''}</span><span>${value('postcode')?`Postnummer ${value('postcode')}`:''} ${value('timing')?`• ${value('timing')}`:''}</span>`}
+
+document.querySelectorAll('.next').forEach(b=>b.addEventListener('click',()=>{if(!validateStep())return;if(current===3)summary();showStep(Math.min(current+1,4))}));
+document.querySelectorAll('.prev').forEach(b=>b.addEventListener('click',()=>showStep(Math.max(current-1,1))));
+
+photoInput.addEventListener('change',()=>{const files=[...photoInput.files];photoList.innerHTML=files.length?`<strong>${files.length} bilde${files.length===1?'':'r'} valgt</strong>${files.map(f=>`<span>${f.name.replace(/[<>]/g,'')}</span>`).join('')}`:'<span>Ingen bilder valgt ennå.</span>'});
+
+form.addEventListener('submit',e=>{e.preventDefault();if(!validateStep())return;const inquiry={id:Date.now(),customer:value('name'),phone:value('phone'),email:value('email'),postcode:value('postcode'),room:value('room'),area:value('area'),description:value('description'),timing:value('timing'),services:services(),photos:[...photoInput.files].map(f=>f.name),status:'new',createdAt:new Date().toISOString()};const inquiries=JSON.parse(localStorage.getItem('moholdtInquiries')||'[]');inquiries.unshift(inquiry);localStorage.setItem('moholdtInquiries',JSON.stringify(inquiries));const jobs=JSON.parse(localStorage.getItem('moholdtDemoJobs')||'[]');jobs.unshift({id:inquiry.id,customer:inquiry.customer||'Ny kunde',project:`${inquiry.services.join(', ')}${inquiry.area?` • ${inquiry.area} m²`:''}`,status:'new',price:'Ikke tilbudt',date:inquiry.timing||'Ikke avtalt'});localStorage.setItem('moholdtDemoJobs',JSON.stringify(jobs));showStep(5)});
+
+showStep(1);
