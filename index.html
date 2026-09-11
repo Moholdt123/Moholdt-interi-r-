@@ -8,13 +8,165 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="nav"><a class="brand" href="#">MOHOLDT <span>INTERIØR</span></a><a class="button small" href="#foresporsel">Få prisestimat</a></header>
-  <main>
-    <section class="hero"><div><p class="eyebrow">MODUM • VIKERSUND • OMEGN</p><h1>Fra uferdig rom til <em>ferdig resultat.</em></h1><p class="lead">Gulv, gips, sparkling, panel, himling, listing og foringer – ryddig utført med én person å forholde seg til.</p><div class="actions"><a class="button" href="#foresporsel">Beregn prosjektet</a><a class="textlink" href="#tjenester">Se tjenester ↓</a></div></div><div class="hero-card"><p>ENKELT FOR DEG</p><strong>Beskriv rommet.<br>Last opp bilder.<br>Få et estimat.</strong><span>Endelig tilbud gis etter at prosjektet er vurdert.</span></div></section>
-    <section id="tjenester" class="section"><p class="eyebrow">TJENESTER</p><h2>Innvendig arbeid jeg vil være god på.</h2><div class="grid"><article><b>01</b><h3>Gulv</h3><p>Laminat, parkett og klikkvinyl. Riving, tilpasninger, listing og bortkjøring kan tas med.</p></article><article><b>02</b><h3>Vegger</h3><p>Gips, sparkling og pussing, Smartpanel, lekting og isolering.</p></article><article><b>03</b><h3>Himling</h3><p>Montering av tak- og himlingspaneler og tilhørende listverk.</p></article><article><b>04</b><h3>Finish</h3><p>Gulv- og taklister, gerikter og foringer rundt vinduer og dører.</p></article></div></section>
-    <section id="foresporsel" class="calculator"><div><p class="eyebrow">PRISKALKULATOR • FØRSTE VERSJON</p><h2>Hva skal gjøres?</h2><p>Velg arbeid og størrelse. Dette gir kun et grovt estimat – ikke et bindende tilbud.</p></div><form id="calc"><label>Areal i m²<input id="area" type="number" min="1" max="500" value="40" /></label><fieldset><legend>Velg arbeid</legend><label><input type="checkbox" name="service" value="floor" checked /> Legge gulv</label><label><input type="checkbox" name="service" value="remove" /> Fjerne eksisterende gulv</label><label><input type="checkbox" name="service" value="trim" /> Lister og finish</label><label><input type="checkbox" name="service" value="wall" /> Gips / veggarbeid</label><label><input type="checkbox" name="service" value="panel" /> Smartpanel / himlingspanel</label></fieldset><div class="estimate"><span>Foreløpig arbeidsestimat</span><strong id="price">–</strong><small>inkl. mva. Materialer og forhold på stedet kan endre prisen.</small></div><button class="button" type="button" id="estimateBtn">Oppdater estimat</button></form></section>
+  <header class="nav">
+    <a class="brand" href="#top">MOHOLDT <span>INTERIØR</span></a>
+    <nav>
+      <a href="#tjenester">Tjenester</a>
+      <a href="#slik">Slik fungerer det</a>
+      <a href="#foresporsel">Prisestimat</a>
+    </nav>
+    <a class="button small" href="#kontakt">Send forespørsel</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">MODUM • VIKERSUND • OMEGN</p>
+        <h1>Fra uferdig rom til <em>ferdig resultat.</em></h1>
+        <p class="lead">Gulv, gips, sparkling, panel, himling, listing og foringer – ryddig utført med én person å forholde seg til.</p>
+        <div class="actions">
+          <a class="button" href="#foresporsel">Beregn prosjektet</a>
+          <a class="textlink" href="#tjenester">Se tjenester ↓</a>
+        </div>
+        <div class="trust-row">
+          <span>✓ Fagbrev som tømrer</span>
+          <span>✓ Innvendig arbeid</span>
+          <span>✓ Tydelig avtalt omfang</span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <p>ENKELT FOR DEG</p>
+        <strong>Beskriv rommet.<br>Last opp bilder.<br>Få et estimat.</strong>
+        <span>Endelig tilbud gis etter at prosjektet er vurdert. Kalkulatoren er kun veiledende.</span>
+      </div>
+    </section>
+
+    <section id="tjenester" class="section">
+      <p class="eyebrow">TJENESTER</p>
+      <h2>Innvendige jobber med tydelig start og slutt.</h2>
+      <p class="section-intro">Fokuset er mindre og mellomstore innvendige oppdrag der godt håndverk og en ryddig prosess betyr mer enn å være størst.</p>
+      <div class="grid">
+        <article><b>01</b><h3>Gulv</h3><p>Laminat, parkett og klikkvinyl. Riving, tilpasninger, listing og bortkjøring kan tas med.</p></article>
+        <article><b>02</b><h3>Vegger</h3><p>Gips, sparkling og pussing, Smartpanel, lekting og isolering.</p></article>
+        <article><b>03</b><h3>Himling</h3><p>Montering av tak- og himlingspaneler og tilhørende listverk.</p></article>
+        <article><b>04</b><h3>Finish</h3><p>Gulv- og taklister, gerikter og foringer rundt vinduer og dører.</p></article>
+      </div>
+    </section>
+
+    <section id="slik" class="process section alt">
+      <div>
+        <p class="eyebrow">SLIK FUNGERER DET</p>
+        <h2>En enkel vei fra idé til ferdig rom.</h2>
+      </div>
+      <div class="steps">
+        <article><span>1</span><h3>Send inn prosjektet</h3><p>Velg tjenester, oppgi størrelse og fortell kort hva du ønsker gjort.</p></article>
+        <article><span>2</span><h3>Bilder eller befaring</h3><p>Bilder kan være nok for en første vurdering. Ved behov avtales befaring før endelig pris.</p></article>
+        <article><span>3</span><h3>Du får tilbud</h3><p>Omfang, pris og hva som er inkludert avtales skriftlig før oppstart.</p></article>
+        <article><span>4</span><h3>Jobben utføres</h3><p>Ryddig gjennomføring, tydelig kommunikasjon og fokus på et ferdig resultat.</p></article>
+      </div>
+    </section>
+
+    <section id="foresporsel" class="calculator">
+      <div class="calculator-copy">
+        <p class="eyebrow">PRISKALKULATOR</p>
+        <h2>Få et grovt arbeidsestimat.</h2>
+        <p>Velg hva som skal gjøres og omtrent hvor stort prosjektet er. Estimatet er kun veiledende og er ikke et bindende tilbud.</p>
+        <div class="note"><strong>Tips:</strong> Jo bedre bilder og beskrivelse du sender, desto lettere er det å gi et presist tilbud.</div>
+      </div>
+
+      <form id="calc" class="card-form">
+        <div class="form-grid two">
+          <label>Areal i m²<input id="area" type="number" min="1" max="500" value="40" /></label>
+          <label>Type rom
+            <select id="roomType">
+              <option value="normal">Vanlig rom</option>
+              <option value="open">Åpent og enkelt</option>
+              <option value="complex">Mange hjørner / tilpasninger</option>
+            </select>
+          </label>
+        </div>
+
+        <fieldset>
+          <legend>Velg arbeid</legend>
+          <div class="check-grid">
+            <label><input type="checkbox" name="service" value="floor" checked /> <span><strong>Legge gulv</strong><small>Laminat, parkett eller klikkvinyl</small></span></label>
+            <label><input type="checkbox" name="service" value="remove" /> <span><strong>Fjerne eksisterende gulv</strong><small>Riving og klargjøring</small></span></label>
+            <label><input type="checkbox" name="service" value="trim" /> <span><strong>Lister og finish</strong><small>Gulvlister, gerikter og mindre tilpasninger</small></span></label>
+            <label><input type="checkbox" name="service" value="wall" /> <span><strong>Gips / veggarbeid</strong><small>Montering og normal sparkling</small></span></label>
+            <label><input type="checkbox" name="service" value="panel" /> <span><strong>Smartpanel / himlingspanel</strong><small>Montering og avslutninger</small></span></label>
+            <label><input type="checkbox" name="service" value="level" /> <span><strong>Avretting</strong><small>Arbeid med avretting, materialer kommer i tillegg</small></span></label>
+          </div>
+        </fieldset>
+
+        <div class="estimate">
+          <span>Foreløpig arbeidsestimat</span>
+          <strong id="price">–</strong>
+          <small>inkl. mva. Materialer, transport, avfall og forhold på stedet kan endre prisen.</small>
+        </div>
+        <button class="button full" type="button" id="estimateBtn">Oppdater estimat</button>
+      </form>
+    </section>
+
+    <section id="kontakt" class="section inquiry-section">
+      <div>
+        <p class="eyebrow">UFORPLIKTENDE FORESPØRSEL</p>
+        <h2>Fortell litt om prosjektet.</h2>
+        <p class="section-intro">Dette skjemaet er laget som første versjon. Det lagrer utkastet lokalt på enheten din og gjør det klart til å sendes når e-postløsning kobles på.</p>
+      </div>
+
+      <form id="inquiryForm" class="card-form inquiry-form">
+        <div class="form-grid two">
+          <label>Navn<input id="name" name="name" type="text" autocomplete="name" placeholder="Ditt navn" /></label>
+          <label>Telefon<input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="Telefonnummer" /></label>
+          <label>E-post<input id="email" name="email" type="email" autocomplete="email" placeholder="navn@epost.no" /></label>
+          <label>Postnummer<input id="postcode" name="postcode" type="text" inputmode="numeric" maxlength="4" placeholder="3370" /></label>
+        </div>
+
+        <label>Hva ønsker du hjelp med?
+          <textarea id="description" name="description" rows="5" placeholder="Eksempel: Ca. 45 m² stue og gang. Gammelt laminat skal bort, nytt gulv skal legges og nye gulvlister monteres."></textarea>
+        </label>
+
+        <div class="form-grid two">
+          <label>Ønsket tidspunkt
+            <select id="timing" name="timing">
+              <option>Så snart som mulig</option>
+              <option>Innen 1 måned</option>
+              <option>Innen 1–3 måneder</option>
+              <option>Senere / fleksibelt</option>
+            </select>
+          </label>
+          <label>Bilder av rommet
+            <input id="photos" name="photos" type="file" accept="image/*" multiple />
+          </label>
+        </div>
+
+        <div id="photoList" class="photo-list" aria-live="polite"></div>
+
+        <label class="consent"><input id="consent" type="checkbox" /> <span>Jeg forstår at dette er en uforpliktende forespørsel og ikke en bestilling.</span></label>
+
+        <div class="inquiry-actions">
+          <button class="button" type="button" id="saveDraft">Lagre utkast</button>
+          <button class="button ghost" type="button" id="copyInquiry">Kopier prosjektbeskrivelse</button>
+        </div>
+        <p id="formStatus" class="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="faq section alt">
+      <div><p class="eyebrow">FØR DU SENDER</p><h2>Noen raske svar.</h2></div>
+      <div class="faq-list">
+        <details><summary>Er prisestimatet bindende?</summary><p>Nei. Kalkulatoren gir kun et grovt spenn. Endelig pris avtales etter vurdering av prosjektet.</p></details>
+        <details><summary>Kan jeg kjøpe materialene selv?</summary><p>Ja. For gulv og andre større materialposter kan kunden kjøpe selv, eller materialinnkjøp kan avtales på forhånd.</p></details>
+        <details><summary>Tar du store tilbygg og takjobber?</summary><p>Hovedfokuset er innvendige jobber og mindre oppussingsprosjekter, ikke store utvendige eller konstruktive entrepriser.</p></details>
+      </div>
+    </section>
   </main>
-  <footer><strong>Moholdt Interiør</strong><span>Nettsiden er under utvikling • Uforpliktende prisestimat</span></footer>
+
+  <footer>
+    <div><strong>Moholdt Interiør</strong><span>Gulv og innvendig oppussing i Modum og omegn.</span></div>
+    <div><span>Nettsiden er under utvikling.</span><span>Uforpliktende prisestimat.</span></div>
+  </footer>
+
   <script src="app.js"></script>
 </body>
 </html>
