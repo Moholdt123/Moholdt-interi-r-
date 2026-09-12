@@ -1,1 +1,127 @@
-<!doctype html><html lang="no"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Gulv og innvendig oppussing i Modum og omegn."><title>Moholdt | Gulv og innvendig oppussing</title><link rel="stylesheet" href="styles.css?v=5"></head><body><header class="topbar"><a class="brand" href="#top">MOHOLDT</a><a class="top-cta" href="#foresporsel">Start prisestimat</a></header><main id="top"><section class="simple-hero"><p class="eyebrow">VIKERSUND • MODUM • OMEGN</p><h1>Hva vil du ha gjort?</h1><p class="hero-copy">Gulv og innvendig oppussing. Velg rom og arbeid, så får du et foreløpig prisestimat med en gang.</p><a class="primary big" href="#foresporsel">Start prisestimat</a><div class="how-it-works" aria-label="Slik fungerer det"><span><b>1</b> Velg arbeid</span><span><b>2</b> Legg inn rom</span><span><b>3</b> Se pris</span><span><b>4</b> Send forespørsel</span></div><p class="micro">Uforpliktende • du bestiller ingenting ved å fylle ut</p><a class="scroll-hint" href="#foresporsel">Start her ↓</a></section><section id="foresporsel" class="request-section"><div class="request-head"><p class="eyebrow">PRIS OG FORESPØRSEL</p><h2>Start med å velge hva du ønsker hjelp med.</h2><p class="request-explain">Du trenger ikke kunne faguttrykk. Velg det som passer best – resten kan avklares senere.</p><div class="progress"><span id="progressBar"></span></div><p id="stepLabel" class="step-label">Steg 1 av 4</p></div><div class="request-layout"><form id="requestForm" class="wizard" novalidate><section class="wizard-step active" data-step="1"><h3>Hva gjelder jobben?</h3><p>Du kan velge én eller flere. Er du usikker, velg det som virker nærmest.</p><div class="choice-grid"><label><input type="checkbox" name="service" value="Gulv"><span>Gulv<small>Legging, gammelt gulv og gulvlister</small></span></label><label><input type="checkbox" name="service" value="Vegger og gips"><span>Vegger og gips<small>Gipsing og arbeid med vegger</small></span></label><label><input type="checkbox" name="service" value="Panel"><span>Panel<small>Panel på vegg eller himling</small></span></label><label><input type="checkbox" name="service" value="Lister og foringer"><span>Lister og foringer<small>Rundt gulv, dører og vinduer</small></span></label><label><input type="checkbox" name="service" value="Avretting"><span>Avretting / oppretting<small>Skjeve gulv eller vegger</small></span></label><label><input type="checkbox" name="service" value="Komplett rom"><span>Komplett rom<small>Flere typer arbeid i samme rom</small></span></label></div><div class="wizard-actions end"><button type="button" class="primary next">Neste – legg inn rom</button></div></section><section class="wizard-step" data-step="2"><h3>Rom og omfang</h3><p>Legg inn ett rom av gangen. Pris på usikker oppretting og større riving vurderes før endelig pris.</p><div id="rooms"></div><button type="button" class="secondary add-room" id="addRoom">+ Legg til et rom</button><label class="timing-label">Ønsket tidspunkt<select id="timing"><option>Fleksibelt</option><option>Så snart som mulig</option><option>Innen 1 måned</option><option>Innen 1–3 måneder</option><option>Senere</option></select></label><div class="wizard-actions"><button type="button" class="secondary prev">Tilbake</button><button type="button" class="primary next">Neste</button></div></section><section class="wizard-step" data-step="3"><h3>Legg ved bilder</h3><p>Bilder er spesielt nyttige i eldre hus og ved riving eller oppretting.</p><label class="upload-box" for="photos"><strong>Velg bilder</strong><span>Fra mobilen eller PC-en.</span><input id="photos" type="file" accept="image/*" multiple></label><div id="photoList" class="photo-list"></div><div class="prototype-note">Prototypen lagrer ikke bildene på nett ennå.</div><div class="wizard-actions"><button type="button" class="secondary prev">Tilbake</button><button type="button" class="primary next">Neste</button></div></section><section class="wizard-step" data-step="4"><h3>Se over forespørselen</h3><div class="field-grid"><label>Navn<input id="name" autocomplete="name" placeholder="Navn"></label><label>Telefon<input id="phone" type="tel" autocomplete="tel" placeholder="Telefonnummer"></label></div><div class="final-review"><div><span>Estimert arbeid og tjenester</span><strong id="finalEstimate">–</strong><small>Materialer holdes separat. Endelig pris avtales etter at jobben er vurdert.</small></div><button type="button" class="text-button" data-goto="1">Endre arbeid</button><button type="button" class="text-button" data-goto="2">Endre rom</button></div><div class="wizard-actions"><button type="button" class="secondary prev">Tilbake</button><button type="submit" class="primary">Send forespørsel</button></div><p class="micro dark">Uforpliktende – du blir kontaktet før noe avtales.</p><p id="formStatus" class="status" aria-live="polite"></p></section><section class="wizard-step success" data-step="5"><div class="success-mark">✓</div><h3>Forespørselen er registrert.</h3><p>I prototypen lagres den lokalt. Neste steg er å koble på ekte innsending.</p><a class="primary" href="admin.html">Se jobboversikten</a></section></form><aside class="order-card"><div class="order-head"><span>Din forespørsel</span><small>Oppdateres automatisk</small></div><div id="cartItems" class="cart-items"></div><div id="cartBreakdown" class="cart-breakdown"></div><div class="cart-total"><span>Estimert arbeid og tjenester</span><strong id="cartEstimate">–</strong><small id="cartEstimateNote">Legg inn rom og arbeid.</small></div><div id="materialInfo" class="material-info"></div><button type="button" class="secondary cart-back" id="cartBack">Gå tilbake</button></aside></div></section></main><footer><strong>MOHOLDT</strong><span>Gulv og innvendig oppussing • Modum og omegn</span></footer><script src="app.js?v=5"></script></body></html>
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Gulv og innvendig oppussing i Modum og omegn.">
+  <title>Moholdt | Gulv og innvendig oppussing</title>
+  <link rel="stylesheet" href="styles.css?v=6">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="#top">MOHOLDT</a><a class="top-cta" href="#foresporsel">Få prisestimat</a></header>
+<main id="top">
+  <section class="simple-hero">
+    <p class="eyebrow">VIKERSUND • MODUM • OMEGN</p>
+    <h1>Hva vil du ha gjort?</h1>
+    <p class="hero-copy">Svar på noen få spørsmål og få et tydelig prisestimat før du sender forespørselen.</p>
+    <a class="primary big" href="#foresporsel">Få prisestimat</a>
+    <div class="how-it-works" aria-label="Slik fungerer det"><span><b>1</b> Velg jobb</span><span><b>2</b> Legg inn rom</span><span><b>3</b> Tilpass pakken</span><span><b>4</b> Send</span></div>
+    <p class="micro">Uforpliktende • du bestiller ingenting ved å fylle ut</p>
+  </section>
+
+  <section id="foresporsel" class="request-section">
+    <div class="request-head">
+      <p class="eyebrow">PRIS OG FORESPØRSEL</p>
+      <h2>Raskt inn. Tydelig pris ut.</h2>
+      <p class="request-explain">Du trenger bare å fylle inn det du vet. Valg om materialer og praktiske ting er frivillige.</p>
+      <div class="progress"><span id="progressBar"></span></div>
+      <p id="stepLabel" class="step-label">Steg 1 av 4</p>
+    </div>
+
+    <div class="request-layout">
+      <form id="requestForm" class="wizard" novalidate>
+        <section class="wizard-step active" data-step="1">
+          <h3>Hva ønsker du hjelp med?</h3>
+          <p>Velg det som passer best. Du kan velge flere.</p>
+          <div class="choice-grid compact">
+            <label><input type="checkbox" name="service" value="Gulv"><span>Gulv<small>Nytt gulv og tilpasning</small></span></label>
+            <label><input type="checkbox" name="service" value="Vegger og gips"><span>Vegger og gips<small>Gipsing og veggarbeid</small></span></label>
+            <label><input type="checkbox" name="service" value="Panel"><span>Panel<small>Vegg eller himling</small></span></label>
+            <label><input type="checkbox" name="service" value="Lister og foringer"><span>Lister og foringer<small>Gulv, dører og vinduer</small></span></label>
+            <label><input type="checkbox" name="service" value="Komplett rom"><span>Komplett rom<small>Flere arbeider i samme rom</small></span></label>
+          </div>
+          <div class="wizard-actions end"><button type="button" class="primary next">Neste</button></div>
+        </section>
+
+        <section class="wizard-step" data-step="2">
+          <h3>Hvilket rom gjelder det?</h3>
+          <p>Ca. størrelse er nok. Du trenger ikke måle helt nøyaktig nå.</p>
+          <div id="rooms"></div>
+          <button type="button" class="secondary add-room" id="addRoom">+ Legg til et rom</button>
+          <div class="wizard-actions"><button type="button" class="secondary prev">Tilbake</button><button type="button" class="primary next">Neste</button></div>
+        </section>
+
+        <section class="wizard-step" data-step="3">
+          <h3>Vil du tilpasse pakken?</h3>
+          <p>Alt her er valgfritt. Behold det du vil at Moholdt skal ordne, eller gjør noe selv for å spare penger.</p>
+          <div id="packageOptions"></div>
+
+          <div class="optional-block">
+            <div class="optional-head"><strong>Har du valgt materialer allerede?</strong><span>Valgfritt</span></div>
+            <select id="materialStatus">
+              <option value="none">Nei / usikker</option>
+              <option value="considered">Ja, jeg har sett på noe</option>
+              <option value="bought">Ja, jeg har kjøpt</option>
+            </select>
+            <div id="materialFields" class="material-fields hidden">
+              <input id="materialName" placeholder="F.eks. Pergo laminat, eik">
+              <input id="materialLink" type="url" placeholder="Lenke til produkt (valgfritt)">
+            </div>
+          </div>
+
+          <div class="optional-block">
+            <div class="optional-head"><strong>Er noe skjevt eller usikkert?</strong><span>Valgfritt</span></div>
+            <div class="pill-options">
+              <label><input type="radio" name="condition" value="ready" checked><span>Ser greit ut</span></label>
+              <label><input type="radio" name="condition" value="uneven"><span>Ja</span></label>
+              <label><input type="radio" name="condition" value="unsure"><span>Usikker</span></label>
+            </div>
+          </div>
+
+          <label class="full-label optional-block">Noe annet jeg bør vite? <small>Valgfritt</small><textarea id="description" rows="3" placeholder="Kort beskjed hvis det er noe spesielt"></textarea></label>
+
+          <label class="upload-box" for="photos"><strong>Legg ved bilder</strong><span>Valgfritt, men veldig nyttig.</span><input id="photos" type="file" accept="image/*" multiple></label>
+          <div id="photoList" class="photo-list"></div>
+          <div class="prototype-note">Bildene sendes ikke på nett i denne prototypen ennå.</div>
+
+          <div class="wizard-actions"><button type="button" class="secondary prev">Tilbake</button><button type="button" class="primary next">Se estimat</button></div>
+        </section>
+
+        <section class="wizard-step" data-step="4">
+          <h3>Dette ser jobben ut til å koste</h3>
+          <div class="final-price-box">
+            <span>Estimert arbeid og tjenester</span>
+            <strong id="finalEstimate">–</strong>
+            <small id="finalNote">Endelig pris avtales før oppstart.</small>
+          </div>
+          <div id="finalIncluded" class="included-list"></div>
+          <p class="reassurance">Du får endelig pris før du bestemmer deg. Eventuelle tillegg avtales før ekstraarbeid utføres.</p>
+          <div class="field-grid"><label>Navn<input id="name" autocomplete="name" placeholder="Navn"></label><label>Telefon<input id="phone" type="tel" autocomplete="tel" placeholder="Telefonnummer"></label></div>
+          <label class="timing-label">Ønsket tidspunkt<select id="timing"><option>Fleksibelt</option><option>Så snart som mulig</option><option>Innen 1 måned</option><option>Innen 1–3 måneder</option><option>Senere</option></select></label>
+          <div class="wizard-actions"><button type="button" class="secondary prev">Tilbake</button><button type="submit" class="primary">Send forespørsel</button></div>
+          <p class="micro dark">Uforpliktende – ingenting bestilles før du har fått og godkjent endelig pris.</p>
+          <p id="formStatus" class="status" aria-live="polite"></p>
+        </section>
+
+        <section class="wizard-step success" data-step="5">
+          <div class="success-mark">✓</div><h3>Forespørselen er registrert.</h3>
+          <p>I prototypen lagres den lokalt. Neste steg blir å koble på ekte innsending.</p>
+          <a class="primary" href="admin.html">Se jobboversikten</a>
+        </section>
+      </form>
+
+      <aside class="order-card">
+        <div class="order-head"><span>Ditt prisestimat</span><small>Oppdateres automatisk</small></div>
+        <div id="cartItems" class="cart-items"></div>
+        <div id="cartBreakdown" class="cart-breakdown"></div>
+        <div class="cart-total"><span>Estimert arbeid og tjenester</span><strong id="cartEstimate">–</strong><small id="cartEstimateNote">Velg jobb og legg inn et rom.</small></div>
+        <div id="includedPreview" class="included-preview"></div>
+        <button type="button" class="secondary cart-back" id="cartBack">Gå tilbake</button>
+      </aside>
+    </div>
+  </section>
+</main>
+<footer><strong>MOHOLDT</strong><span>Gulv og innvendig oppussing • Modum og omegn</span></footer>
+<script src="app.js?v=6"></script>
+</body>
+</html>
