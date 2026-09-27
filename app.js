@@ -14,16 +14,21 @@
   var photoList=document.getElementById('photoList');
   var status=document.getElementById('formStatus');
   var current=1;
+  var roomSequence=0;
 
   function money(n){return new Intl.NumberFormat('nb-NO',{style:'currency',currency:'NOK',maximumFractionDigits:0}).format(Math.round(n/100)*100)}
   function has(arr,val){return arr.indexOf(val)!==-1}
   function services(){var out=[],nodes=document.querySelectorAll('input[name="service"]:checked');for(var i=0;i<nodes.length;i++)out.push(nodes[i].value);return out}
   function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-  function roomTemplate(first){return '<article class="room-card simple-room"><div class="room-title"><strong>Rom <span class="room-number"></span></strong>'+(first?'':'<button type="button" class="remove-room">Fjern</button>')+'</div><div class="field-grid"><label>Type rom<select class="r-type"><option value="">Velg romtype</option><option>Stue</option><option>Soverom</option><option>Gang</option><option>Kjøkken</option><option>Kontor</option><option>Annet</option></select></label><label>Ca. størrelse<input class="r-area" type="number" min="1" placeholder="f.eks. 20 m²"></label></div></article>'}
+  function roomTemplate(first){
+    var id=++roomSequence,names=['Stue','Soverom','Gang','Kjøkken','Kontor','Annet'],icons=["M5 10V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4M5 10H3v9h18v-9h-2M5 10v5h14v-5M5 19v2M19 19v2","M3 18V7M21 18V7M3 10h18v7H3M6 10V6h5v4M13 10V6h5v4M3 17v4M21 17v4","M6 21V3h12v18M3 21h18M14 12h1","M3 10h18v11H3zM3 4h18v6M10 10v11M14 14h3M6 14h1M6 4v3M12 4v3M18 4v3","M3 11h18M5 11v10M19 11v10M8 3h8v6H8zM12 9v2M14 16h5","M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"];
+    var options=names.map(function(name,i){return '<label class="room-option"><input type="radio" class="r-type" name="room-type-'+id+'" value="'+name+'"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="'+icons[i]+'"/></svg><b>'+name+'</b><i aria-hidden="true"></i></span></label>'}).join('');
+    return '<article class="room-card simple-room"><div class="room-title"><strong>Rom <span class="room-number"></span></strong>'+(first?'':'<button type="button" class="remove-room">Fjern rom</button>')+'</div><fieldset class="room-types"><legend>Velg romtype</legend><div class="room-type-grid">'+options+'</div></fieldset><div class="room-area-row"><label for="room-area-'+id+'">Hvor stort er rommet?<small>Et omtrentlig gulvareal er nok.</small></label><div class="room-area-input"><input id="room-area-'+id+'" class="r-area" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="20" aria-describedby="room-unit-'+id+'"><span id="room-unit-'+id+'">m²</span></div></div></article>';
+  }
   function renumber(){var cards=roomsEl.querySelectorAll('.room-card');for(var i=0;i<cards.length;i++)cards[i].querySelector('.room-number').textContent=i+1}
   function bindRooms(){var fields=roomsEl.querySelectorAll('input,select');for(var i=0;i<fields.length;i++){fields[i].oninput=updateAll;fields[i].onchange=updateAll}var remove=roomsEl.querySelectorAll('.remove-room');for(var j=0;j<remove.length;j++)remove[j].onclick=function(){this.parentNode.parentNode.remove();renumber();updateAll()}}
   function addRoom(first){roomsEl.insertAdjacentHTML('beforeend',roomTemplate(first));renumber();bindRooms();updateAll()}
-  function getRooms(){var cards=roomsEl.querySelectorAll('.room-card'),out=[];for(var i=0;i<cards.length;i++)out.push({type:cards[i].querySelector('.r-type').value||('Rom '+(i+1)),area:Math.max(0,Number(cards[i].querySelector('.r-area').value)||0)});return out}
+  function getRooms(){var cards=roomsEl.querySelectorAll('.room-card'),out=[];for(var i=0;i<cards.length;i++)out.push({type:(cards[i].querySelector('.r-type:checked')||{}).value||('Rom '+(i+1)),area:Math.max(0,Number(cards[i].querySelector('.r-area').value)||0)});return out}
   function totalArea(){var rs=getRooms(),sum=0;for(var i=0;i<rs.length;i++)sum+=rs[i].area;return sum}
   function optionChecked(name){var el=document.querySelector('input[name="'+name+'"]');return !!(el&&el.checked)}
 
