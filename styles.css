@@ -86,3 +86,5 @@
 .location-summary[data-area="review"],.location-summary[data-area="unknown"],.location-summary[data-area="checking"],.location-summary[data-area="empty"]{background:#f4f0e5;border-color:#d6ccb8}
 .location-summary[data-area="review"] .location-check,.location-summary[data-area="unknown"] .location-check,.location-summary[data-area="checking"] .location-check{background:#8b713f}
 #requestForm button:disabled,.location-continue:disabled{opacity:.48;cursor:not-allowed}
+
+.location-summary[data-area="oslo"]{background:#fbebe7;border-color:#d7a49a}.location-summary[data-area="oslo"] strong{color:#8e3025}.location-summary[data-area="oslo"] span:not(.location-check){color:#85463c}.location-summary[data-area="oslo"] .location-check{background:#a3382a}

@@ -11,6 +11,8 @@
     return 6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(Math.max(0,1-a)));
   }
   function classify(addresses){
+    // Oslo municipality is excluded independently of travel distance.
+    if(addresses.some(function(a){return String(a.kommunenummer)==='0301'||String(a.kommunenavn||'').trim().toUpperCase()==='OSLO'}))return 'oslo';
     var points=addresses.filter(function(a){return a.representasjonspunkt&&Number.isFinite(a.representasjonspunkt.lat)&&Number.isFinite(a.representasjonspunkt.lon)});
     if(!points.length)return 'unknown';
     // All returned address samples must be local before showing green.
@@ -22,16 +24,17 @@
   function canProceed(){return (state==='local'||state==='review')&&field.value.trim()===committed}
   function render(){
     var badge=document.querySelector('.location-summary'),icon=document.getElementById('locationCheck'),title=document.getElementById('locationTitle'),detail=document.getElementById('locationDetail');
-    badge.dataset.area=state;icon.hidden=state==='empty';icon.textContent=state==='local'?'✓':state==='outside'?'×':'!';
+    badge.dataset.area=state;icon.hidden=state==='empty';icon.textContent=state==='local'?'✓':(state==='outside'||state==='oslo')?'×':'!';
     var place=committed+(town?' · '+town:'');
-    title.textContent=state==='local'?'Vi tar oppdrag i ditt område · '+place:state==='outside'?'Utenfor arbeidsområdet · '+place:state==='review'?'Jobbsted må vurderes · '+place:state==='checking'?'Kontrollerer postnummer …':state==='unknown'?'Postnummeret er ikke kontrollert':'Legg til jobbsted';
-    detail.textContent=state==='local'?'Tidspunkt og endelig oppdrag avtales med Moholdt.':state==='outside'?'Dette er for langt fra Vikersund. Forespørselen kan ikke sendes.':state==='review'?'Området er ikke endelig godkjent. Moholdt vurderer adressen og kjøretiden.':'Vi kontrollerer poststedet før du går videre.';
+    title.textContent=state==='local'?'Vi tar oppdrag i ditt område · '+place:state==='oslo'?'Vi tar ikke oppdrag i Oslo · '+place:state==='outside'?'Utenfor arbeidsområdet · '+place:state==='review'?'Jobbsted må vurderes · '+place:state==='checking'?'Kontrollerer postnummer …':state==='unknown'?'Postnummeret er ikke kontrollert':'Legg til jobbsted';
+    detail.textContent=state==='local'?'Tidspunkt og endelig oppdrag avtales med Moholdt.':state==='oslo'?'Vi tar foreløpig ikke oppdrag i Oslo kommune. Forespørselen kan ikke sendes.':state==='outside'?'Dette er for langt fra Vikersund. Forespørselen kan ikke sendes.':state==='review'?'Området er ikke endelig godkjent. Moholdt vurderer adressen og kjøretiden.':'Vi kontrollerer poststedet før du går videre.';
     edit.textContent=committed?'Endre':'Legg til';
     document.getElementById('postalCodeSummary').textContent=committed;
     document.querySelectorAll('#requestForm .next, #requestForm button[type="submit"]').forEach(function(button){button.disabled=!canProceed()});
   }
   function open(trigger){
     returnFocus=trigger&&trigger.focus?trigger:edit;field.value=committed;error.textContent='';field.removeAttribute('aria-invalid');
+    if(state==='oslo')error.textContent='Vi tar foreløpig ikke oppdrag i Oslo kommune.';
     if(state==='outside')error.textContent='Dette poststedet ligger utenfor arbeidsområdet. Legg inn et annet jobbsted.';
     if(!dialog.open)dialog.showModal();field.focus();
   }
@@ -50,6 +53,7 @@
       var addresses=(data.adresser||[]).filter(function(a){return a.postnummer===value});
       if(!addresses.length){state='unknown';error.textContent='Fant ingen jobbadresser med dette postnummeret. Kontroller nummeret; postboksnummer kan ikke brukes.';render();return}
       town=addresses[0].poststed||'';state=classify(addresses);render();
+      if(state==='oslo'){error.textContent='Vi tar foreløpig ikke oppdrag i Oslo kommune. Du kan ikke sende en forespørsel for dette jobbstedet.';return}
       if(state==='outside'){error.textContent='Beklager, '+town+' ligger for langt unna. Vi tar oppdrag inntil 90 minutters kjøring fra Vikersund. Du kan ikke sende en forespørsel for dette området.';return}
       if(state==='unknown'){error.textContent='Vi kunne ikke kontrollere området. Prøv igjen.';return}
       document.getElementById('postalTown').value=town;
