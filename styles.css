@@ -88,3 +88,23 @@
 #requestForm button:disabled,.location-continue:disabled{opacity:.48;cursor:not-allowed}
 
 .location-summary[data-area="oslo"]{background:#fbebe7;border-color:#d7a49a}.location-summary[data-area="oslo"] strong{color:#8e3025}.location-summary[data-area="oslo"] span:not(.location-check){color:#85463c}.location-summary[data-area="oslo"] .location-check{background:#a3382a}
+
+/* Service selection cards: native checkboxes with a clear selected state. */
+.choice-grid.service-choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0 8px}
+.service-choices .service-option{position:relative;display:block;min-width:0}.service-choices .service-option-wide{grid-column:1/-1}
+.service-choices .service-option>input{position:absolute;width:1px;height:1px;padding:0;margin:0;opacity:0}
+.choice-grid.service-choices .service-card{display:grid;grid-template-columns:52px minmax(0,1fr);grid-template-rows:auto auto;column-gap:16px;row-gap:6px;align-content:center;min-height:114px;padding:22px 46px 22px 20px;background:#fffdf8;border:2px solid #dfdfd3;border-radius:12px;transition:background-color .18s,border-color .18s,box-shadow .18s;color:#27382b}
+.service-card .service-icon{grid-column:1;grid-row:1/3;align-self:center;width:52px;height:52px;padding:11px;background:#edf0e5;border-radius:10px;color:#56694e}
+.service-card .service-title{grid-column:2;grid-row:1;align-self:end;font-size:17px;line-height:1.3;font-weight:700;overflow-wrap:break-word}
+.choice-grid.service-choices .service-description{grid-column:2;grid-row:2;display:block;align-self:start;font-size:13px;font-weight:400;line-height:1.45;color:#687260;margin:0}
+.service-card .service-tick{position:absolute;right:16px;top:18px;width:22px;height:22px;border:1.5px solid #c3cbbb;border-radius:50%;background:#fffdf8;display:grid;place-items:center;font:700 14px Arial,sans-serif}
+@media(hover:hover){.service-choices .service-option:hover .service-card{border-color:#91a186;box-shadow:0 3px 12px #24352809}}
+.choice-grid.service-choices input:checked+.service-card{background:#2d4431;border:2px solid #2d4431;color:#fffdf7;box-shadow:0 3px 12px #24352818}
+.choice-grid.service-choices input:checked+.service-card:after{content:none}
+.choice-grid.service-choices input:checked+.service-card .service-description{color:#dce6d5}
+.choice-grid.service-choices input:checked+.service-card .service-icon{background:#435e46;color:#eff5e8}
+.choice-grid.service-choices input:checked+.service-card .service-tick{background:#e5eddc;border-color:#e5eddc;color:#27382b}
+.choice-grid.service-choices input:checked+.service-card .service-tick:before{content:"✓"}
+.choice-grid.service-choices input:focus-visible+.service-card{outline:3px solid #ad8550;outline-offset:4px}
+@media(max-width:640px){.choice-grid.service-choices{grid-template-columns:1fr;gap:12px}.choice-grid.service-choices .service-card{min-height:102px;padding:18px 44px 18px 16px;column-gap:14px}.service-card .service-title{font-size:16px}.service-choices .service-option-wide{grid-column:auto}}
+@media(prefers-reduced-motion:reduce){.choice-grid.service-choices .service-card{transition:none}}
