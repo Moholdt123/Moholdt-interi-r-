@@ -1,37 +1,28 @@
 # Moholdt Interiør
 
-Første prototype på nettside og kundeforespørsel for et lite firma innen gulv og innvendig oppussing.
+Statisk nettside på GitHub Pages med prisestimat og kundeforespørsler.
 
-## Dette finnes nå
+## Innsending
 
-- Responsiv forside
-- Tjenesteoversikt
-- Enkel prosessforklaring
-- Veiledende priskalkulator
-- Forespørselsskjema
-- Bildevelger
-- Lokal lagring av utkast i nettleseren
-- Kopierbar prosjektbeskrivelse
-- Mobiltilpasset design
+Skjemaet sender via FormSubmit til mottakeradressen i `mail.js`. Bytt `config.recipient` der for å endre mottaker; en ny adresse må aktiveres på nytt.
 
-## Viktig om dagens versjon
+1. Send en tydelig merket testforespørsel fra den publiserte nettsiden.
+2. Fullfør FormSubmits sikkerhetssjekk.
+3. Åpne aktiveringsmeldingen fra FormSubmit i mottakerens innboks (sjekk søppelpost) og bekreft adressen.
+4. Send deretter en ny test, og kontroller at e-posten faktisk kommer fram og at Svar går til kundens e-postadresse.
 
-Skjemaet sender foreløpig ikke data til en server. Kundens utkast lagres kun lokalt i nettleseren. Bildene lagres eller sendes heller ikke noe sted ennå.
+Aktivering og faktisk levering er ikke bekreftet av kodeendringen alene.
 
-Prisene i kalkulatoren er testverdier og må kvalitetssikres før nettsiden brukes mot ekte kunder. Endelig tilbud må alltid vurderes ut fra faktisk underlag, omfang, materialer, transport, avfall og tilpasninger.
+Forespørselen inneholder kontaktinformasjon, jobbadresse, rom og areal, ønsket arbeid, inkluderte tjenester, estimat, tidspunkt, underlag, materialopplysninger og kundens beskjed. Bilder sendes som separate vedlegg (maks 10 MB totalt). Prisene er foreløpige og må kvalitetssikres.
 
-## Naturlige neste steg
+Innsending bruker vanlig POST med FormSubmits CAPTCHA. Kunden forlater siden for sikkerhetssjekken og returnerer til `takk.html` etter godkjent behandling. Ingen automatisk jobbaksept, tilbud eller kunde-e-post sendes. E-postens Reply-To peker på kunden.
 
-1. Koble skjemaet til en backend/database.
-2. Lagre kundeforespørsler og bilder sikkert.
-3. Lage enkel adminside med status: ny, vurderes, tilbud sendt, godkjent, ferdig.
-4. Legge til kalender/kapasitetsstyring.
-5. Koble på e-postvarsling.
-6. Justere kalkulatoren med reelle priser og jobbdata.
-7. Publisere en testversjon på eget domene eller egnet hosting.
+Skjemaet lagrer ikke nye forespørsler lokalt. Den gamle adminsiden er en separat lokal demonstrasjon, og er ikke en innboks for de innsendte forespørslene.
 
-## Filer
+## Arbeidsområde
 
-- `index.html` – innhold og struktur
-- `styles.css` – design og mobiltilpasning
-- `app.js` – kalkulator, utkastlagring og prosjektoppsummering
+Inntil 90 minutters kjøring én vei fra Vikersund. Postnummer og adresse samles inn, men sjekken gjøres manuelt av Moholdt. Ingen automatisk avvisning ut fra adresse.
+
+## Opplysninger og drift
+
+FormSubmit behandler skjemaopplysninger og bilder. Se https://formsubmit.co/documentation for leverandørens vilkår. Ingen API-nøkler eller passord skal legges i dette offentlige repositoriet.

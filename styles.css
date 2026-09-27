@@ -17,3 +17,5 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress span{transition:none}}
 
 .postcode-field{max-width:280px;margin:24px 0 8px}.postcode-field input{min-height:48px}.job-address{border-top:1px solid #d9d1c5;padding-top:24px;margin-top:24px}.job-address h4{font:24px Georgia,serif;margin:0 0 16px}.job-address>p{font-size:13px;line-height:1.5;color:#626b61}.success .primary{display:inline-block;margin-top:14px}
+
+.thank-you-page{min-height:calc(100vh - 68px);background:#202a22;padding:72px 20px;display:grid;place-items:center}.thank-you-card{max-width:700px;padding:48px;background:#f8f4eb}.thank-you-card h1{font:clamp(32px,5vw,46px)/1.1 Georgia,serif;margin:20px 0}.thank-you-card p{line-height:1.7}.thank-you-card .primary{display:inline-block;margin-top:20px}@media(max-width:520px){.thank-you-card{padding:28px}.thank-you-page{padding:32px 20px}}
