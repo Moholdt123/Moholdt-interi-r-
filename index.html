@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Moholdt hjelper med gulvlegging, gips, panel og listverk i Vikersund, Modum og omegn. Prøv kalkulatoren for et veiledende prisestimat.">
   <title>Moholdt | Gulv og innvendig oppussing</title>
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
 <header class="topbar"><a class="brand" href="#top">MOHOLDT</a><a class="top-cta" href="beregn.html">Få prisestimat</a></header>
@@ -20,11 +20,17 @@
     </div>
   </section>
   <section class="project-showcase home-section" id="prosjekt" aria-labelledby="project-title">
-    <div class="project-heading"><div><p class="eyebrow">ET ROM · FØR OG ETTER</p><h2 id="project-title">Soverommet fikk et nytt uttrykk.</h2><p>Fra lyse panelvegger til blågrå flater, spilevegg og nytt gulv.</p></div>
-    <div class="project-switch" role="group" aria-label="Velg før- eller etterbilde"><button type="button" data-project-view="before" aria-pressed="false" aria-controls="project-before">Før</button><button type="button" data-project-view="after" aria-pressed="true" aria-controls="project-after">Etter</button></div></div>
-    <figure id="project-after" class="project-figure"><div class="project-photo"><img src="images/soverom-etter.jpg" alt="Soverom etter oppussing, med blågrå vegger, spilevegg, vegghengte nattbord og tregulv." width="1844" height="853" loading="lazy"></div><figcaption>Etter oppussing. Bildet er AI-retusjert for å fjerne verktøy og løse gjenstander.</figcaption></figure>
-    <figure id="project-before" class="project-figure" hidden><div class="project-photo before-photo"><img src="images/soverom-for.jpg" alt="Soverom før oppussing, med lyst panel, eldre seng og mønstret gulv." width="1536" height="710" loading="lazy"></div><figcaption>Før oppussing. Utsnitt fra et skjermbilde av rommet.</figcaption></figure>
-    <noscript><p><a href="images/soverom-for.jpg">Se førbildet</a></p></noscript>
+    <div class="project-heading"><div><p class="eyebrow">ET ROM · FØR OG ETTER</p><h2 id="project-title">Soverommet fikk et nytt uttrykk.</h2><p>Dra skillet til siden og se forandringen.</p></div></div>
+    <figure class="project-figure">
+      <div class="comparison" id="roomComparison" style="--split:60%">
+        <div class="comparison-layer comparison-after"><img src="images/soverom-etter.jpg" alt="Etter: blågrå vegger, spilevegg, vegghengte nattbord og nytt gulv." width="1844" height="853" loading="lazy" draggable="false"></div>
+        <div class="comparison-layer comparison-before"><img src="images/soverom-for.jpg" alt="Før: lyst panel, eldre seng og mønstret gulv." width="1536" height="710" loading="lazy" draggable="false"></div>
+        <span class="comparison-label label-before" aria-hidden="true">Før</span><span class="comparison-label label-after" aria-hidden="true">Etter</span>
+        <div class="comparison-divider" aria-hidden="true"><span>‹ ›</span></div>
+      </div>
+      <div class="comparison-controls"><label for="comparisonRange">Dra for å sammenligne</label><input id="comparisonRange" type="range" min="0" max="100" value="60" aria-label="Hvor mye av førbildet som vises" aria-valuetext="60 prosent førbilde"><div class="comparison-shortcuts"><button type="button" id="showBefore">Vis hele førbildet</button><button type="button" id="showAfter">Vis hele etterbildet</button></div></div>
+      <figcaption>Bildene er tatt fra ulike vinkler. Førbildet er et utsnitt fra et skjermbilde. Etterbildet er AI-retusjert for å fjerne verktøy og løse gjenstander. <a href="images/soverom-for.jpg" target="_blank" rel="noopener">Åpne originalt førbilde</a>.</figcaption>
+    </figure>
   </section>
   <section id="tjenester" class="home-section" aria-labelledby="services-title">
     <div class="section-intro"><p class="eyebrow">DETTE KAN JEG HJELPE MED</p><h2 id="services-title">Fra nytt gulv til et helt rom.</h2><p>Velg arbeidet du trenger hjelp til. I kalkulatoren kan du kombinere flere tjenester.</p></div>
@@ -38,4 +44,4 @@
   <section class="home-section price-info" aria-labelledby="price-title"><div class="section-intro"><p class="eyebrow">OM PRISESTIMATET</p><h2 id="price-title">En pekepinn før du bestemmer deg.</h2></div><div class="price-answers"><details><summary>Hva beregner kalkulatoren?</summary><p>Estimatet gjelder arbeid og tilleggstjenestene du velger. Innkjøp av gulv, panel og andre materialer er ikke beregnet. Kjøring til arbeidsstedet og eventuell mva. er ikke avklart i denne testversjonen.</p></details><details><summary>Er beløpet et bindende tilbud?</summary><p>Nei. Kalkulatoren bruker foreløpige testpriser. Underlag, tilpasninger og omfang må vurderes før du får en endelig pris.</p></details><details><summary>Hvor tar Moholdt oppdrag?</summary><p>Utgangspunktet er Vikersund, med en grense på 1 time og 30 minutters kjøring én vei. Adressen og kjøretiden vurderes av Moholdt når forespørselen er mottatt.</p></details></div></section>
 
   <section class="landing-end"><p class="eyebrow">HAR DU EN JOBB I TANKENE?</p><h2>Start med et prisestimat.</h2><p>Velg tjenester, legg inn rom og fortell litt om jobben.</p><a class="primary" href="beregn.html">Åpne priskalkulatoren <span aria-hidden="true">→</span></a></section>
-</main><footer><strong>MOHOLDT</strong><span>Gulv og innvendig oppussing • Modum og omegn</span></footer><script>if(location.hash==="#foresporsel")location.replace("beregn.html");</script><script src="project.js?v=1"></script></body></html>
+</main><footer><strong>MOHOLDT</strong><span>Gulv og innvendig oppussing • Modum og omegn</span></footer><script>if(location.hash==="#foresporsel")location.replace("beregn.html");</script><script src="project.js?v=2"></script></body></html>
