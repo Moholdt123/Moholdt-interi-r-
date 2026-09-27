@@ -127,3 +127,35 @@
 @media(hover:hover){.room-option:hover>span{border-color:#8fa17f}#addRoom:hover{background:#e4ead9}}
 @media(max-width:640px){#rooms .room-card{padding:18px}.room-type-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.room-option>span{padding:14px 26px 14px 12px;gap:9px;min-height:72px}.room-option svg{width:23px;height:23px}.room-area-row{align-items:stretch;flex-direction:column;gap:12px}.room-area-input{width:100%}}
 @media(prefers-reduced-motion:reduce){.room-option>span{transition:none}}
+
+/* Show the price before optional details, in the same continuous flow. */
+.showing-estimate .request-head .eyebrow,.showing-estimate .request-head h2,.showing-estimate .request-explain,.showing-estimate .calculator-notice{display:none}
+.showing-estimate .request-head .location-summary{margin-top:0;margin-bottom:16px}
+.early-estimate{display:grid;gap:10px;background:#2d4431;color:#fffdf7;border:1px solid #2d4431;border-radius:14px;padding:26px;margin:20px 0 26px}
+.early-estimate>span{font-size:12px;color:#dce6d5}
+.early-estimate>strong{font:clamp(28px,5vw,40px)/1.2 Georgia,serif;overflow-wrap:anywhere}
+.early-estimate>p{margin:0;font-size:14px;line-height:1.5;color:#e5eddc}
+.early-estimate>small{font-size:12px;line-height:1.5;color:#dce6d5}
+.early-estimate .primary{margin-top:10px;background:#f5eedf;color:#27382b;border-radius:8px;min-height:48px}
+.early-estimate>small:last-child{text-align:center}
+.estimate-step .extras-intro{font-size:14px;margin:0 0 14px}
+.estimate-option{border:1px solid #dcded1;border-radius:12px;background:#fffdf8;margin:12px 0;overflow:hidden}
+.estimate-option>summary{display:flex;align-items:center;gap:14px;list-style:none;padding:20px;cursor:pointer;font-size:15px;font-weight:700;color:#2d4431}
+.estimate-option>summary::-webkit-details-marker{display:none}
+.estimate-option>summary:after{content:"+";font-size:24px;font-weight:400;margin-left:auto;flex-shrink:0}
+.estimate-option[open]>summary:after{content:"−"}
+.estimate-option>summary small{display:block;font-size:12px;font-weight:400;line-height:1.5;color:#697260;margin-top:5px}
+.estimate-option>summary:focus-visible{outline:3px solid #ad8550;outline-offset:-4px}
+.estimate-option .option-count{font-size:11px;white-space:nowrap;background:#edf1e5;padding:6px 8px;border-radius:20px}
+.option-body{border-top:1px solid #e4e5da;padding:0 20px 20px}
+.option-body .optional-block,.option-body .package-card{border:0;background:transparent;padding:0;margin:20px 0 0}
+.option-body .package-title>span{display:none}
+.option-body .package-title small,.option-body .package-row small{display:none}
+.option-body .package-title strong{font-size:14px}
+.option-body .package-row{padding:16px 0;align-items:center}
+.option-body .package-row input{accent-color:#2d4431}
+.option-hint{color:#687260;font-size:13px;line-height:1.5;margin:18px 0}
+.option-body .pill-options span{border-radius:8px;line-height:1.5}
+.pill-options input:focus-visible+span{outline:3px solid #ad8550;outline-offset:3px}
+.estimate-step .wizard-actions button{border-radius:8px}
+@media(max-width:520px){.early-estimate{padding:20px}.estimate-option>summary{padding:17px;gap:8px}.option-body{padding:0 17px 17px}.estimate-option .option-count{font-size:10px}}
