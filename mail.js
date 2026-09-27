@@ -19,6 +19,8 @@
       Arbeid:inquiry.rooms.map(function(r){return r.type+': '+r.area+' m²'}).concat(['', 'Inkludert:'],price.included).join('\n'),
       Underlag:conditions[inquiry.condition]||'Må avklares',
       Materialer:[materialStatus[inquiry.material.status],inquiry.material.name,inquiry.material.link].filter(Boolean).join('\n'),
+      Gulvlister:inquiry.options&&inquiry.options.skirting?'Ønsker montering av gulvlister.\nProduktlenke: '+(inquiry.skirtingLink||'Velges senere'):'Ingen ekstra gulvlister valgt.',
+      Hindringer:inquiry.obstacles&&inquiry.obstacles.length?inquiry.obstacles.concat([inquiry.obstacleNote||'','Eventuelt ekstraarbeid er ikke inkludert i estimatet og må avklares.']).filter(Boolean).join('\n'):'Ingen hindringer oppgitt.',
       Henting:inquiry.options&&inquiry.options.pickup?'Ønsker hjelp med henting.\nØnsket butikk: '+(inquiry.pickupStore||'Ikke valgt – avklares med kunden')+'\nBekreft butikk, lagerstatus, mengde og pris med kunden.':'Kunden ordner materialene selv.',
       Beskjed:inquiry.description||'Ingen ekstra beskjed fra kunden.',
       Oppfølging:'Vil du tilby jobben? Åpne tilbudsverktøyet, fyll inn kundens opplysninger og din endelige pris, og lag et tilbud: '+new URL('tilbud.html',root.location.href).href+'\nDu kan også trykke Svar i denne e-posten for å avklare detaljer med kunden.',
