@@ -9,7 +9,7 @@
     var area=inquiry.rooms.reduce(function(sum,room){return sum+room.area},0);
     var clean=function(s){return String(s).replace(/[\r\n]/g,' ').slice(0,180)};
     var received=new Intl.DateTimeFormat('nb-NO',{dateStyle:'long',timeStyle:'short',timeZone:'Europe/Oslo'}).format(new Date(inquiry.createdAt));
-    return {
+    var data={
       _subject:clean('Ny jobbforespørsel · '+inquiry.services.join(', ')+' · '+area+' m² · '+inquiry.address.town),
       _template:'box',
       _replyto:inquiry.email,
@@ -28,21 +28,41 @@
       Merknad:'Uforpliktende forespørsel. Kontroller adresse/kjøretid, omfang og endelig pris. Nettestimatet bruker foreløpige priser; materialer, kjøring og eventuell mva. må avklares.',
       email:inquiry.email
     };
+    if(inquiry.projects&&inquiry.projects.length){
+      delete data.Arbeid;delete data.Underlag;delete data.Materialer;delete data.Gulvlister;delete data.Hindringer;delete data.Henting;delete data.Beskjed;
+      data._subject=clean('Samlet forespørsel · '+inquiry.projects.length+' jobber · '+inquiry.address.town);
+      inquiry.projects.forEach(function(job,index){
+        var detail=fields(Object.assign({},inquiry,job,{projects:null}),{included:[]});
+        data['Jobb '+(index+1)+' – '+job.services.join(', ')]=[
+          job.rooms.map(function(room){return room.type+': '+room.area+' m²'}).join(', '),
+          'Estimat: '+job.estimate,'Ønsket tidspunkt: '+job.timing,
+          'Materialer: '+detail.Materialer,'Gulvlister: '+detail.Gulvlister,
+          'Henting: '+detail.Henting,job.services.indexOf('Gulv')!==-1?'Underlag: '+detail.Underlag:'',
+          'Hindringer: '+detail.Hindringer,'Beskjed: '+detail.Beskjed,
+          'Valgte tillegg: '+Object.keys(job.options||{}).filter(function(key){return job.options[key]}).map(function(key){return {demoFloor:'Fjerne gammelt gulv',dispose:'Bortkjøring',pickup:'Henting',skirting:'Gulvlister',furniture:'Møbelflytting',demoWall:'Riving vegg/panel',disposeOther:'Bortkjøring riveavfall'}[key]||key}).join(', ')
+        ].join('\n');
+      });
+    }
+    return data;
   }
 
   function send(inquiry,price,photos){
     var total=0;
     for(var i=0;i<photos.length;i++){total+=photos[i].size;if(!/^image\//.test(photos[i].type))throw new Error('Legg bare ved bildefiler. Fjern andre filtyper før du sender.')}
-    if(total>config.maxPhotoBytes)throw new Error('Bildene er større enn 10 MB til sammen. Velg færre eller mindre bilder.');
+    if(!root.MoholdtPDF)throw new Error('PDF-verktøyet kunne ikke lastes. Last siden på nytt og prøv igjen.');
+    inquiry.pdfIncluded=price.included;
+    var pdf=root.MoholdtPDF.create(inquiry);total+=pdf.size;
+    var attachments=[pdf].concat(Array.from(photos));
+    if(total>config.maxPhotoBytes)throw new Error('Bildene og PDF-en er større enn 10 MB til sammen. Velg færre eller mindre bilder.');
     var outgoing=document.createElement('form');
     outgoing.method='POST';outgoing.action='https://formsubmit.co/'+encodeURIComponent(config.recipient);
     outgoing.enctype='multipart/form-data';outgoing.hidden=true;
     var data=fields(inquiry,price);
     data._next=new URL('takk.html',root.location.href).href;
     Object.keys(data).forEach(function(key){var input=document.createElement('input');input.type='hidden';input.name=key;input.value=data[key];outgoing.appendChild(input)});
-    for(var p=0;p<photos.length;p++){
+    for(var p=0;p<attachments.length;p++){
       var attachment=document.createElement('input');attachment.type='file';attachment.name=p===0?'attachment':'attachment'+(p+1);
-      var transfer=new DataTransfer();transfer.items.add(photos[p]);attachment.files=transfer.files;outgoing.appendChild(attachment);
+      var transfer=new DataTransfer();transfer.items.add(attachments[p]);attachment.files=transfer.files;outgoing.appendChild(attachment);
     }
     document.body.appendChild(outgoing);
     try{HTMLFormElement.prototype.submit.call(outgoing)}catch(error){outgoing.remove();throw error}

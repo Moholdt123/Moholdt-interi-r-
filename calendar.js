@@ -25,7 +25,7 @@
     el('busyLegend').hidden=blocked.size===0;
   }
   function preference(text){
-    selected='';el('timing').value=text;el('dateSelection').textContent='Ønsket tidspunkt: '+text;
+    selected='';el('timing').dataset.date='';el('timing').value=text;el('dateSelection').textContent='Ønsket tidspunkt: '+text;
     el('dateFlexible').setAttribute('aria-pressed',String(text==='Fleksibelt'));
     el('dateSoon').setAttribute('aria-pressed',String(text==='Så snart som mulig'));render();
   }
@@ -36,12 +36,20 @@
   el('calendarDays').onclick=function(event){
     var button=event.target.closest('button[data-date]');if(!button||button.disabled||!loaded)return;
     var id=button.dataset.date;if(blocked.has(id)||id<key(today))return;
-    selected=id;var p=id.split('-'),date=new Date(Number(p[0]),Number(p[1])-1,Number(p[2]),12);
+    selected=id;el('timing').dataset.date=id;var p=id.split('-'),date=new Date(Number(p[0]),Number(p[1])-1,Number(p[2]),12);
     el('timing').value='Ønsket oppstart: '+dayFormat.format(date);
     el('dateSelection').textContent=el('timing').value;
     el('dateFlexible').setAttribute('aria-pressed','false');el('dateSoon').setAttribute('aria-pressed','false');render();
     var chosen=el('calendarDays').querySelector('[data-date="'+id+'"]');if(chosen)chosen.focus({preventScroll:true});
   };
+  window.addEventListener('project-timing',function(event){
+    var detail=event.detail;
+    preference(typeof detail==='string'?detail:(detail&&detail.text)||'Fleksibelt');
+    if(detail&&detail.date&&/^\d{4}-\d{2}-\d{2}$/.test(detail.date)){
+      if(detail.date<key(today)||blocked.has(detail.date)){preference('Fleksibelt');el('dateSelection').textContent='Tidligere ønsket dato er passert eller opptatt. Velg en ny dato.';return}
+      var p=detail.date.split('-');selected=detail.date;el('timing').dataset.date=selected;month=new Date(Number(p[0]),Number(p[1])-1,1,12);render();
+    }
+  });
   render();
   fetch('availability.json',{cache:'no-store'}).then(function(response){if(!response.ok)throw new Error('calendar');return response.json()}).then(function(data){
     if(!Array.isArray(data.blockedDates)||!data.blockedDates.every(function(d){return typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)}))throw new Error('calendar');

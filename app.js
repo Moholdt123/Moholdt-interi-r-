@@ -15,6 +15,8 @@
   var status=document.getElementById('formStatus');
   var current=1;
   var roomSequence=0;
+  var projectKey='moholdt-projects-v1',projects=[],editingProjectId=null;
+  try{var stored=JSON.parse(localStorage.getItem(projectKey)||'[]');if(Array.isArray(stored))projects=stored.filter(function(job){return job&&job.id&&job.data&&Array.isArray(job.data.services)&&Array.isArray(job.data.rooms)&&job.price&&Number.isFinite(job.price.low)&&Number.isFinite(job.price.high)&&job.snapshot}).slice(0,30)}catch(ignore){}
 
   function money(n){return new Intl.NumberFormat('nb-NO',{style:'currency',currency:'NOK',maximumFractionDigits:0}).format(Math.round(n/100)*100)}
   function has(arr,val){return arr.indexOf(val)!==-1}
@@ -92,15 +94,103 @@
     document.getElementById('shopTrimLink').style.display=trim?'block':'none';
     document.getElementById('materialLinkLabel').textContent=floor&&!trim?'Legg inn lenke til gulvet her':trim&&!floor?'Legg inn lenke til listene her':'Legg inn produktlenke her';
   }
-  function updateAll(){updateRoomCopy();updateMaterialShopLinks();var e=estimate(),rs=getRooms(),html='';updateEstimatePreview(e);for(var i=0;i<rs.length;i++)html+='<div class="cart-item"><span><strong>'+esc(rs[i].type)+'</strong>'+(rs[i].area?' • '+rs[i].area+' m²':'')+'</span></div>';cartItems.innerHTML=html||'<p class="empty-cart">Legg inn et rom.</p>';var breakdown='';for(var j=0;j<e.lines.length;j++)breakdown+='<span><em>'+esc(e.lines[j][0])+'</em><strong>'+money(e.lines[j][1])+'</strong></span>';cartBreakdown.innerHTML=breakdown;if(e.labor){var text=money(e.low)+' – '+money(e.high);finalEstimate.textContent=text;finalNote.textContent=e.review?'Prisnivået er veiledende. Underlag eller hindringer må avklares før endelig pris.':'Dette er et foreløpig estimat. Endelig pris avtales før oppstart.';}else{finalEstimate.textContent='–';finalNote.textContent='Endelig pris avtales før oppstart.'}var inc='';for(var k=0;k<e.included.length;k++)inc+='<li>✓ '+esc(e.included[k])+'</li>';finalIncluded.innerHTML=inc?'<h4>Dette er inkludert</h4><ul>'+inc+'</ul>':''}
+  function updateAll(){updateRoomCopy();updateMaterialShopLinks();var e=estimate(),rs=getRooms(),html='';updateEstimatePreview(e);for(var i=0;i<rs.length;i++)html+='<div class="cart-item"><span><strong>'+esc(rs[i].type)+'</strong>'+(rs[i].area?' • '+rs[i].area+' m²':'')+'</span></div>';cartItems.innerHTML=html||'<p class="empty-cart">Legg inn et rom.</p>';var breakdown='';for(var j=0;j<e.lines.length;j++)breakdown+='<span><em>'+esc(e.lines[j][0])+'</em><strong>'+money(e.lines[j][1])+'</strong></span>';cartBreakdown.innerHTML=breakdown;if(e.labor){var text=money(e.low)+' – '+money(e.high);finalEstimate.textContent=text;finalNote.textContent=e.review?'Prisnivået er veiledende. Underlag eller hindringer må avklares før endelig pris.':'Dette er et foreløpig estimat. Endelig pris avtales før oppstart.';}else{finalEstimate.textContent='–';finalNote.textContent='Endelig pris avtales før oppstart.'}var inc='';for(var k=0;k<e.included.length;k++)inc+='<li>✓ '+esc(e.included[k])+'</li>';finalIncluded.innerHTML=inc?'<h4>Dette er inkludert</h4><ul>'+inc+'</ul>':'';renderProjectList();renderProjectSummary()}
   function showStep(n,scroll){current=n;document.getElementById('foresporsel').classList.toggle('showing-estimate',n===3);document.getElementById('postalCodeSummary').textContent=document.getElementById('postalCode').value.trim();document.querySelector('.request-layout').classList.toggle('final-step',n>=4);if(n===3)buildPackageOptions();for(var i=0;i<steps.length;i++)steps[i].classList.toggle('active',Number(steps[i].getAttribute('data-step'))===n);if(n<=4){progressBar.style.width=(n*25)+'%';stepLabel.textContent='Steg '+n+' av 4';stepLabel.style.display='block'}else{progressBar.style.width='100%';stepLabel.style.display='none'}updateAll();if(scroll!==false){var activeHeading=document.querySelector('.wizard-step.active h3');activeHeading.setAttribute('tabindex','-1');activeHeading.focus({preventScroll:true});document.getElementById('foresporsel').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'})}}
   function validate(){status.textContent='';if(!window.JobLocation||!window.JobLocation.canProceed()){status.textContent='Kontroller jobbstedet før du fortsetter.';if(window.JobLocation)window.JobLocation.open();return false}var postal=document.getElementById('postalCode'),postalStatus=document.getElementById('postalCodeStatus');postalStatus.textContent='';postal.removeAttribute('aria-invalid');if((current===1||current===4)&&!/^\d{4}$/.test(postal.value.trim())){postalStatus.textContent='Fyll inn et postnummer med fire sifre.';postal.setAttribute('aria-invalid','true');if(window.JobLocation)window.JobLocation.open();postal.focus();return false}if(current===1&&!services().length){alert('Velg minst én type arbeid.');return false}if(current===2){var rs=getRooms(),ok=false;for(var i=0;i<rs.length;i++)if(rs[i].area)ok=true;if(!ok){alert('Legg inn ca. størrelse på minst ett rom.');return false}}if(current===4){var addressIds=['streetAddress','postalTown'];for(var a=0;a<addressIds.length;a++){var addressField=document.getElementById(addressIds[a]);if(!addressField.value.trim()){status.textContent='Fyll inn gateadresse og poststed for jobben.';addressField.focus();return false}}}if(current===4&&!document.getElementById('name').value.trim()){status.textContent='Fyll inn navn.';return false}if(current===4){var email=document.getElementById('email');email.value=email.value.trim();email.removeAttribute('aria-invalid');if(!email.value||!email.checkValidity()){status.textContent='Fyll inn en gyldig e-postadresse, for eksempel navn@eksempel.no.';email.setAttribute('aria-invalid','true');email.focus();return false}}if(current===4&&!document.getElementById('phone').value.trim()){status.textContent='Fyll inn telefonnummer.';return false}return true}
   var next=document.querySelectorAll('.next');for(var i=0;i<next.length;i++)next[i].onclick=function(){if(validate())showStep(Math.min(current+1,4))};var prev=document.querySelectorAll('.prev');for(var j=0;j<prev.length;j++)prev[j].onclick=function(){showStep(Math.max(current-1,1))};document.getElementById('addRoom').onclick=function(){addRoom(false)};var globalChecks=document.querySelectorAll('input[name="service"]');for(var g=0;g<globalChecks.length;g++)globalChecks[g].onchange=updateAll;var materialStatus=document.getElementById('materialStatus');document.getElementById('materialLink').oninput=function(){materialStatus.value=this.value.trim()?'considered':'none'};document.querySelector('input[name="opt_pickup"]').onchange=updateAll;document.querySelector('input[name="opt_skirting"]').onchange=updateAll;document.querySelectorAll('input[name="floorObstacle"]').forEach(function(input){input.onchange=updateAll});var conditionNodes=document.querySelectorAll('input[name="condition"]');for(var c=0;c<conditionNodes.length;c++)conditionNodes[c].onchange=updateAll;photoInput.onchange=function(){photoList.innerHTML=photoInput.files.length?'<strong>'+photoInput.files.length+' bilder valgt</strong>':'<span>Ingen bilder valgt.</span>'};
-  form.onsubmit=function(ev){ev.preventDefault();if(current!==4)return;if(!services().length){showStep(1);return}if(!totalArea()){showStep(2);return}if(!validate())return;var p=estimate(),condition=document.querySelector('input[name="condition"]:checked');var inquiry={id:Date.now(),customer:document.getElementById('name').value.trim(),phone:document.getElementById('phone').value.trim(),email:document.getElementById('email').value.trim(),address:{street:document.getElementById('streetAddress').value.trim(),postalCode:document.getElementById('postalCode').value.trim(),town:document.getElementById('postalTown').value.trim()},rooms:getRooms(),services:services(),timing:document.getElementById('timing').value,options:{demoFloor:optionChecked('opt_demo_floor'),dispose:optionChecked('opt_dispose'),pickup:optionChecked('opt_pickup'),skirting:optionChecked('opt_skirting'),furniture:optionChecked('opt_furniture'),demoWall:optionChecked('opt_demo_wall'),disposeOther:optionChecked('opt_dispose_other')},skirtingLink:has(services(),'Gulv')&&optionChecked('opt_skirting')?document.getElementById('skirtingLink').value.trim():'',obstacles:getObstacles(),obstacleNote:getObstacles().length?document.getElementById('obstacleNote').value.trim():'',pickupStore:optionChecked('opt_pickup')?document.getElementById('pickupStore').value.trim():'',material:{status:materialStatus.value,name:document.getElementById('materialName').value.trim(),link:document.getElementById('materialLink').value.trim()},condition:condition?condition.value:'ready',description:document.getElementById('description').value.trim(),photos:[],estimate:p.labor?money(p.low)+' – '+money(p.high):'Må vurderes',needsReview:p.review,status:'new',createdAt:new Date().toISOString()};for(var i=0;i<photoInput.files.length;i++)inquiry.photos.push(photoInput.files[i].name);try{
+  form.onsubmit=function(ev){ev.preventDefault();if(current!==4)return;if(!projects.length&&!services().length){showStep(1);return}if(services().length&&!totalArea()){showStep(2);return}if(!projects.length&&!totalArea()){showStep(2);return}if(!validate())return;var p=estimate(),condition=document.querySelector('input[name="condition"]:checked');var inquiry=makeInquiry(p);for(var i=0;i<photoInput.files.length;i++)inquiry.photos.push(photoInput.files[i].name);try{
       if(!window.MoholdtMail)throw new Error('Innsendingen kunne ikke lastes. Last siden på nytt og prøv igjen.');
+      var jobs=effectiveProjects();
+      if(jobs.length){inquiry.projects=jobs.map(function(job){return job.data});inquiry.services=Array.from(new Set(jobs.reduce(function(out,job){return out.concat(job.data.services)},[])));inquiry.rooms=jobs.reduce(function(out,job){return out.concat(job.data.rooms)},[]);p=projectTotal(jobs);inquiry.estimate=money(p.low)+' – '+money(p.high);inquiry.needsReview=p.review;}
       window.MoholdtMail.send(inquiry,p,photoInput.files);
       status.textContent='Du sendes videre til en sikkerhetssjekk. Fullfør den for å sende forespørselen.';
     }catch(err){status.textContent=err.message||'Innsendingen kunne ikke startes. Prøv igjen. Opplysningene står fortsatt i skjemaet.'}
+  };
+
+
+  function makeInquiry(p){var condition=document.querySelector('input[name="condition"]:checked');return {id:Date.now(),customer:document.getElementById('name').value.trim(),phone:document.getElementById('phone').value.trim(),email:document.getElementById('email').value.trim(),address:{street:document.getElementById('streetAddress').value.trim(),postalCode:document.getElementById('postalCode').value.trim(),town:document.getElementById('postalTown').value.trim()},rooms:getRooms(),services:services(),timing:document.getElementById('timing').value,options:{demoFloor:optionChecked('opt_demo_floor'),dispose:optionChecked('opt_dispose'),pickup:optionChecked('opt_pickup'),skirting:optionChecked('opt_skirting'),furniture:optionChecked('opt_furniture'),demoWall:optionChecked('opt_demo_wall'),disposeOther:optionChecked('opt_dispose_other')},skirtingLink:has(services(),'Gulv')&&optionChecked('opt_skirting')?document.getElementById('skirtingLink').value.trim():'',obstacles:getObstacles(),obstacleNote:getObstacles().length?document.getElementById('obstacleNote').value.trim():'',pickupStore:optionChecked('opt_pickup')?document.getElementById('pickupStore').value.trim():'',material:{status:materialStatus.value,name:document.getElementById('materialName').value.trim(),link:document.getElementById('materialLink').value.trim()},condition:condition?condition.value:'ready',description:document.getElementById('description').value.trim(),photos:[],estimate:p.labor?money(p.low)+' – '+money(p.high):'Må vurderes',needsReview:p.review,status:'new',createdAt:new Date().toISOString()}}
+  function projectSnapshot(){
+    var fields={};
+    ['materialStatus','materialName','materialLink','skirtingLink','obstacleNote','pickupStore','description','timing'].forEach(function(id){fields[id]=document.getElementById(id).value});
+    var checked={};form.querySelectorAll('input[type="checkbox"],input[name="condition"]').forEach(function(input){if(input.name==='service'||input.name==='floorObstacle'){if(input.checked)(checked[input.name]||(checked[input.name]=[])).push(input.value)}else checked[input.name]=input.type==='radio'?(input.checked?input.value:checked[input.name]):input.checked});
+    return {fields:fields,checked:checked,rooms:getRooms(),calendarDate:document.getElementById('timing').dataset.date||''};
+  }
+  function currentProject(){
+    if(!services().length||!totalArea())return null;
+    var p=estimate(),raw=makeInquiry(p),data={};
+    ['rooms','services','timing','options','skirtingLink','obstacles','obstacleNote','pickupStore','material','condition','description','estimate','needsReview'].forEach(function(key){data[key]=raw[key]});
+    return {id:editingProjectId||('job-'+Date.now()),data:data,price:p,snapshot:projectSnapshot()};
+  }
+  function effectiveProjects(){
+    var out=projects.slice(),job=currentProject();
+    if(job){var index=out.findIndex(function(item){return item.id===editingProjectId});if(index>=0)out[index]=job;else out.push(job)}
+    return out;
+  }
+  function projectTotal(jobs){return jobs.reduce(function(total,job){total.low+=job.price.low;total.high+=job.price.high;total.labor+=job.price.labor;total.review=total.review||job.price.review;total.included=total.included.concat(job.price.included||[]);return total},{low:0,high:0,labor:0,review:false,included:[]})}
+  function projectTitle(job){return job.data.services.join(' + ')+' · '+job.data.rooms.map(function(room){return room.type+' '+room.area+' m²'}).join(', ')}
+  function persistProjects(){
+    try{localStorage.setItem(projectKey,JSON.stringify(projects));return true}
+    catch(error){document.getElementById('projectStatus').textContent='Kunne ikke lagre i nettleseren. Listen beholdes mens siden er åpen, men kan bli borte når du lukker den.';return false}
+  }
+  function saveProject(){
+    var job=currentProject();if(!job){document.getElementById('projectStatus').textContent='Velg arbeid og legg inn areal før du lagrer.';return false}
+    if(!editingProjectId&&projects.length>=30){document.getElementById('projectStatus').textContent='Listen har plass til 30 jobber.';return false}
+    var index=projects.findIndex(function(item){return item.id===editingProjectId});
+    if(index>=0)projects[index]=job;else projects.push(job);
+    editingProjectId=job.id;var saved=persistProjects();renderProjectList();renderProjectSummary();
+    if(saved)document.getElementById('projectStatus').textContent='Jobben er lagret på denne enheten. Du kan legge til flere jobber eller sende samlet.';
+    return saved;
+  }
+  function clearJob(){
+    editingProjectId=null;
+    form.querySelectorAll('input[name="service"],input[name="floorObstacle"],input[name^="opt_"]').forEach(function(input){input.checked=false});
+    document.querySelector('input[name="condition"][value="ready"]').checked=true;
+    ['materialName','materialLink','skirtingLink','obstacleNote','pickupStore','description'].forEach(function(id){document.getElementById(id).value=''});
+    materialStatus.value='none';document.getElementById('timing').value='Fleksibelt';
+    window.dispatchEvent(new CustomEvent('project-timing',{detail:'Fleksibelt'}));
+    roomsEl.innerHTML='';packageOptions.innerHTML='';addRoom(true);showStep(1);
+  }
+  function restoreProject(id){
+    var job=projects.find(function(item){return item.id===id});if(!job)return;
+    if(currentProject()&&editingProjectId!==id&&!saveProject())return;
+    var snapshot=job.snapshot;
+    form.querySelectorAll('input[name="service"]').forEach(function(input){input.checked=(snapshot.checked.service||[]).indexOf(input.value)!==-1});
+    roomsEl.innerHTML='';
+    snapshot.rooms.forEach(function(room,index){addRoom(index===0);var card=roomsEl.lastElementChild;card.querySelector('.r-area').value=room.area;card.querySelectorAll('.r-type').forEach(function(input){input.checked=input.value===room.type})});
+    buildPackageOptions();
+    form.querySelectorAll('input[name^="opt_"]').forEach(function(input){input.checked=!!snapshot.checked[input.name]});
+    form.querySelectorAll('input[name="floorObstacle"]').forEach(function(input){input.checked=(snapshot.checked.floorObstacle||[]).indexOf(input.value)!==-1});
+    form.querySelectorAll('input[name="condition"]').forEach(function(input){input.checked=input.value===(snapshot.checked.condition||'ready')});
+    Object.keys(snapshot.fields).forEach(function(id){var field=document.getElementById(id);if(field&&['materialStatus','materialName','materialLink','skirtingLink','obstacleNote','pickupStore','description','timing'].indexOf(id)!==-1)field.value=snapshot.fields[id]});
+    editingProjectId=id;window.dispatchEvent(new CustomEvent('project-timing',{detail:{text:document.getElementById('timing').value,date:snapshot.calendarDate||''}}));showStep(3);
+    document.getElementById('projectStatus').textContent='Du redigerer en lagret jobb. Trykk «Lagre i prosjektlisten» når du er ferdig.';
+  }
+  function renderProjectList(){
+    var container=document.getElementById('savedProjects');
+    container.innerHTML=projects.map(function(job){return '<li><div><strong>'+esc(projectTitle(job))+'</strong><span>'+esc(job.data.estimate)+'</span></div><div class="project-row-actions"><button type="button" data-project-edit="'+esc(job.id)+'">Endre</button><button type="button" data-project-remove="'+esc(job.id)+'">Fjern</button></div></li>'}).join('');
+    document.getElementById('projectCount').textContent=projects.length;
+    document.getElementById('projectEmpty').hidden=projects.length>0;
+    document.getElementById('sendProjectList').hidden=!projects.length;
+    var total=projectTotal(projects);
+    document.getElementById('savedProjectTotal').textContent=projects.length?'Lagret estimat: '+money(total.low)+' – '+money(total.high):'';
+    document.querySelectorAll('.save-project').forEach(function(button){button.hidden=!services().length||!totalArea();button.textContent=editingProjectId?'Oppdater lagret jobb':'Lagre i prosjektlisten'});
+  }
+  function renderProjectSummary(){
+    if(!projects.length)return;
+    var jobs=effectiveProjects(),total=projectTotal(jobs);
+    finalEstimate.textContent=money(total.low)+' – '+money(total.high);
+    finalNote.textContent='Samlet estimat for '+jobs.length+' jobb'+(jobs.length===1?'':'er')+'. Endelig pris og tidspunkt avtales samlet.'+(total.review?' Underlag eller hindringer må avklares.':'');
+    finalIncluded.innerHTML='<h4>Dette er med i forespørselen</h4>'+jobs.map(function(job){return '<div class="project-summary-row"><strong>'+esc(projectTitle(job))+'</strong><span>'+esc(job.data.estimate)+'</span></div>'}).join('');
+    cartItems.innerHTML=jobs.map(function(job){return '<div class="cart-item">'+esc(projectTitle(job))+'</div>'}).join('');
+    cartBreakdown.innerHTML=jobs.map(function(job){return '<span><em>'+esc(job.data.services.join(' + '))+'</em><strong>'+esc(job.data.estimate)+'</strong></span>'}).join('');
+  }
+  document.querySelectorAll('.save-project').forEach(function(button){button.onclick=function(){saveProject();document.getElementById('projectListPanel').open=true}});
+  document.getElementById('addProject').onclick=function(){if(services().length&&!saveProject())return;clearJob()};
+  document.getElementById('sendProjectList').onclick=function(){if(services().length&&!saveProject())return;showStep(4)};
+  document.getElementById('savedProjects').onclick=function(event){
+    var edit=event.target.closest('[data-project-edit]'),remove=event.target.closest('[data-project-remove]');
+    if(edit)restoreProject(edit.dataset.projectEdit);
+    if(remove){var id=remove.dataset.projectRemove;projects=projects.filter(function(job){return job.id!==id});if(editingProjectId===id)clearJob();persistProjects();updateAll()}
   };
 
   addRoom(true);showStep(1,false);
