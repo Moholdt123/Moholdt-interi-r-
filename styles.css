@@ -19,3 +19,16 @@
 .postcode-field{max-width:280px;margin:24px 0 8px}.postcode-field input{min-height:48px}.job-address{border-top:1px solid #d9d1c5;padding-top:24px;margin-top:24px}.job-address h4{font:24px Georgia,serif;margin:0 0 16px}.job-address>p{font-size:13px;line-height:1.5;color:#626b61}.success .primary{display:inline-block;margin-top:14px}
 
 .thank-you-page{min-height:calc(100vh - 68px);background:#202a22;padding:72px 20px;display:grid;place-items:center}.thank-you-card{max-width:700px;padding:48px;background:#f8f4eb}.thank-you-card h1{font:clamp(32px,5vw,46px)/1.1 Georgia,serif;margin:20px 0}.thank-you-card p{line-height:1.7}.thank-you-card .primary{display:inline-block;margin-top:20px}@media(max-width:520px){.thank-you-card{padding:28px}.thank-you-page{padding:32px 20px}}
+
+/* One continuous, centered request flow. Details appear with the final estimate. */
+.request-section .request-head,.request-section .request-layout{width:100%;max-width:860px;margin-left:auto;margin-right:auto}
+.request-section .request-layout{display:block}
+.request-section .request-head{margin-bottom:0;padding:32px 40px 24px;background:#f8f4eb;color:#20241f;border-bottom:1px solid #ddd7cb}
+.request-head .eyebrow{color:#657063}.request-head .request-explain{color:#626b61}.request-head .calculator-notice{color:#626b61;border-color:#9aa58e;font-size:12px}
+.request-head .progress{max-width:none;background:#dce1d7;height:4px}.request-head .progress span{background:#526748}.request-head .step-label{color:#526048;margin:12px 0 0}
+.request-section .wizard-step{padding:32px 40px 36px}.wizard-step h3{font-size:30px}.wizard-step[data-step="1"] h4{border-top:1px solid #ddd7cb;padding-top:26px;margin:26px 0 8px;font:24px Georgia,serif}
+.wizard-step[data-step="1"] h4+p{margin:0 0 18px}.wizard-actions{padding-top:20px;border-top:1px solid #ddd7cb}
+.choice-grid input:focus-visible+span{outline:3px solid #9d773e;outline-offset:3px}.choice-grid span{position:relative;padding-right:35px}.choice-grid input:checked+span:after{content:"✓";position:absolute;right:14px;top:16px;color:#27382b}
+.estimate-details{margin:10px 0 24px;border-top:1px solid #d9d1c5;border-bottom:1px solid #d9d1c5;padding:16px 0}
+.estimate-details summary{cursor:pointer;font-size:14px;font-weight:700}.estimate-details .cart-breakdown{padding-bottom:8px}.estimate-details .cart-breakdown>span{font-size:14px}
+@media(max-width:600px){.request-section{padding-left:16px;padding-right:16px}.request-section .request-head{padding:26px 22px 22px}.request-section .wizard-step{padding:26px 22px}.request-head h2{font-size:32px}.wizard-step h3{font-size:28px}.choice-grid{grid-template-columns:1fr}}
