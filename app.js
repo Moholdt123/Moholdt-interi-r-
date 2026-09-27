@@ -5,6 +5,7 @@
   var stepLabel=document.getElementById('stepLabel');
   var roomsEl=document.getElementById('rooms');
   var packageOptions=document.getElementById('packageOptions');
+  var suggestedOptions=document.getElementById('suggestedOptions');
   var cartItems=document.getElementById('cartItems');
   var cartBreakdown=document.getElementById('cartBreakdown');
   var finalEstimate=document.getElementById('finalEstimate');
@@ -33,15 +34,20 @@
   function optionChecked(name){var el=document.querySelector('input[name="'+name+'"]');return !!(el&&el.checked)}
 
   function buildPackageOptions(){
-    var selected={},oldInputs=packageOptions.querySelectorAll('input');for(var o=0;o<oldInputs.length;o++)selected[oldInputs[o].name]=oldInputs[o].checked;var s=services(),html='';
+    var selected={},oldInputs=form.querySelectorAll('#packageOptions input, #suggestedOptions input');for(var o=0;o<oldInputs.length;o++)selected[oldInputs[o].name]=oldInputs[o].checked;var s=services(),html='';
     if(has(s,'Gulv'))html+='<div class="package-card"><div class="package-title"><div><strong>Vil du ha hjelp med noe rundt gulvleggingen?</strong><small>Selve gulvleggingen er allerede med i estimatet. Kryss bare av for det ekstra du ønsker hjelp med.</small></div><span>Valgfritt</span></div>'+
       '<label class="package-row"><input type="checkbox" name="opt_demo_floor"><span><b>Fjerne gammelt gulv</b><small>Lar du gulvet være ferdig revet før jeg kommer, betaler du ikke for rivearbeid.</small></span></label>'+
       '<label class="package-row"><input type="checkbox" name="opt_dispose"><span><b>Kjøre bort gammelt gulv og avfall</b><small>Kjører du bort avfallet selv, sparer du kostnaden for bortkjøring.</small></span></label>'+
       '<label class="package-row"><input type="checkbox" name="opt_pickup"><span><b>Hente det nye gulvet</b><small>Har du gulvet klart hjemme, slipper du kostnaden for henting.</small></span></label>'+
-      '<label class="package-row"><input type="checkbox" name="opt_skirting"><span><b>Montere nye gulvlister</b><small>Velg hvis du ønsker rommet ferdig listet etter gulvleggingen.</small></span></label>'+
-      '<label class="package-row"><input type="checkbox" name="opt_furniture"><span><b>Hjelp til å flytte møbler</b><small>Tømmer du rommet selv før oppstart, kommer det ingen kostnad for møbelflytting.</small></span></label></div>';
+      '</div>';
+    var suggestions='';
+    if(has(s,'Gulv'))suggestions='<label class="package-row"><input type="checkbox" name="opt_skirting"><span><b>Montere nye gulvlister</b><small>Velg hvis du ønsker rommet ferdig listet etter gulvleggingen.</small></span></label>'+
+      '<label class="package-row"><input type="checkbox" name="opt_furniture"><span><b>Hjelp til å flytte møbler</b><small>Tømmer du rommet selv før oppstart, kommer det ingen kostnad for møbelflytting.</small></span></label>';
+    suggestedOptions.innerHTML=suggestions;
+    document.getElementById('suggestedDetails').hidden=!suggestions;
+
     if(has(s,'Vegger og gips')||has(s,'Panel')||has(s,'Komplett rom'))html+='<div class="package-card"><div class="package-title"><div><strong>Vil du ha hjelp før arbeidet starter?</strong><small>Kryss bare av hvis du ønsker at Moholdt skal gjøre dette også.</small></div><span>Valgfritt</span></div><label class="package-row"><input type="checkbox" name="opt_demo_wall"><span><b>Rive eksisterende vegg/panel</b><small>River du selv på forhånd, betaler du ikke for rivearbeidet.</small></span></label><label class="package-row"><input type="checkbox" name="opt_dispose_other"><span><b>Kjøre bort riveavfall</b><small>Kjører du bort avfallet selv, sparer du kostnaden for bortkjøring.</small></span></label></div>';
-    packageOptions.innerHTML=html||'<div class="optional-block"><strong>Ingen ekstra valg nødvendig.</strong><p>Du kan gå rett videre.</p></div>';var inputs=packageOptions.querySelectorAll('input');for(var i=0;i<inputs.length;i++){inputs[i].checked=!!selected[inputs[i].name];inputs[i].onchange=updateAll;}
+    packageOptions.innerHTML=html||'<div class="optional-block"><strong>Ingen ekstra valg nødvendig.</strong><p>Du kan gå rett videre.</p></div>';var inputs=form.querySelectorAll('#packageOptions input, #suggestedOptions input');for(var i=0;i<inputs.length;i++){inputs[i].checked=!!selected[inputs[i].name];inputs[i].onchange=updateAll;}
   }
 
   function baseCalc(){var area=totalArea(),s=services(),labor=0,lines=[],included=[],review=false;if(!area||!s.length)return {labor:0,lines:[],included:[],review:false};for(var i=0;i<s.length;i++){var service=s[i],amount=0,label=service;if(service==='Gulv'){amount=Math.max(5500,320*area);label='Legging av nytt gulv';included.push('Legging og tilpasning av nytt gulv','Kapping rundt hjørner, dører og avslutninger','Normal opprydding etter arbeidet')}if(service==='Vegger og gips'){amount=520*area;included.push('Gipsing og normalt veggarbeid','Tilpasning og montering','Normal opprydding')}if(service==='Panel'){amount=390*area;included.push('Montering og tilpasning av panel','Normal opprydding')}if(service==='Lister og foringer'){amount=110*area;included.push('Montering og tilpasning av lister/foringer')}if(service==='Komplett rom'){amount=850*area;included.push('Arbeid med flere overflater i rommet','Tilpasning og montering','Normal opprydding')}if(amount){labor+=amount;lines.push([label,amount])}}
@@ -69,6 +75,8 @@
     document.getElementById('liveEstimateNote').textContent=e.review?'Foreløpig estimat. Underlaget må vurderes før endelig pris.':'Foreløpig estimat for arbeidet, uten materialer. Forutsetter normalt, klart underlag. Endelig pris avtales før oppstart.';
     var count=packageOptions.querySelectorAll('input:checked').length;
     document.getElementById('extrasCount').textContent=count?count+' valgt':'Valgfritt';
+    var suggestedCount=suggestedOptions.querySelectorAll('input:checked').length;
+    document.getElementById('suggestedCount').textContent=suggestedCount?suggestedCount+' valgt':'Valgfritt';
   }
   function updateAll(){updateRoomCopy();var e=estimate(),rs=getRooms(),html='';updateEstimatePreview(e);for(var i=0;i<rs.length;i++)html+='<div class="cart-item"><span><strong>'+esc(rs[i].type)+'</strong>'+(rs[i].area?' • '+rs[i].area+' m²':'')+'</span></div>';cartItems.innerHTML=html||'<p class="empty-cart">Legg inn et rom.</p>';var breakdown='';for(var j=0;j<e.lines.length;j++)breakdown+='<span><em>'+esc(e.lines[j][0])+'</em><strong>'+money(e.lines[j][1])+'</strong></span>';cartBreakdown.innerHTML=breakdown;if(e.labor){var text=money(e.low)+' – '+money(e.high);finalEstimate.textContent=text;finalNote.textContent=e.review?'Prisnivået er veiledende. Skjevhet/usikkert underlag må vurderes før endelig pris.':'Dette er et foreløpig estimat. Endelig pris avtales før oppstart.';}else{finalEstimate.textContent='–';finalNote.textContent='Endelig pris avtales før oppstart.'}var inc='';for(var k=0;k<e.included.length;k++)inc+='<li>✓ '+esc(e.included[k])+'</li>';finalIncluded.innerHTML=inc?'<h4>Dette er inkludert</h4><ul>'+inc+'</ul>':''}
   function showStep(n,scroll){current=n;document.getElementById('foresporsel').classList.toggle('showing-estimate',n===3);document.getElementById('postalCodeSummary').textContent=document.getElementById('postalCode').value.trim();document.querySelector('.request-layout').classList.toggle('final-step',n>=4);if(n===3)buildPackageOptions();for(var i=0;i<steps.length;i++)steps[i].classList.toggle('active',Number(steps[i].getAttribute('data-step'))===n);if(n<=4){progressBar.style.width=(n*25)+'%';stepLabel.textContent='Steg '+n+' av 4';stepLabel.style.display='block'}else{progressBar.style.width='100%';stepLabel.style.display='none'}updateAll();if(scroll!==false){var activeHeading=document.querySelector('.wizard-step.active h3');activeHeading.setAttribute('tabindex','-1');activeHeading.focus({preventScroll:true});document.getElementById('foresporsel').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'})}}
