@@ -8,27 +8,25 @@
     var materialStatus={none:'Ikke valgt / usikker',considered:'Har sett på materialer',bought:'Har kjøpt materialer'};
     var area=inquiry.rooms.reduce(function(sum,room){return sum+room.area},0);
     var clean=function(s){return String(s).replace(/[\r\n]/g,' ').slice(0,180)};
+    var received=new Intl.DateTimeFormat('nb-NO',{dateStyle:'long',timeStyle:'short',timeZone:'Europe/Oslo'}).format(new Date(inquiry.createdAt));
     return {
-      _subject:clean('Ny forespørsel – '+inquiry.services.join(', ')+' – '+area+' m² – '+inquiry.address.town),
-      _template:'table',
+      _subject:clean('Ny jobbforespørsel · '+inquiry.services.join(', ')+' · '+area+' m² · '+inquiry.address.town),
+      _template:'box',
       _replyto:inquiry.email,
-      name:inquiry.customer,
-      email:inquiry.email,
-      Telefon:inquiry.phone,
+      Oversikt:[inquiry.services.join(', ')+' · '+area+' m²',inquiry.address.postalCode+' '+inquiry.address.town,'Ønsket tidspunkt: '+inquiry.timing,'Veiledende estimat fra nettsiden: '+inquiry.estimate].join('\n'),
+      Kunde:[inquiry.customer,'Telefon: '+inquiry.phone,'E-post: '+inquiry.email].join('\n'),
       Jobbadresse:inquiry.address.street+', '+inquiry.address.postalCode+' '+inquiry.address.town,
-      Arbeid:inquiry.services.join(', '),
-      Rom:inquiry.rooms.map(function(r){return r.type+': '+r.area+' m²'}).join('\n'),
-      'Ønsket tidspunkt':inquiry.timing,
-      'Kundens prisestimat':inquiry.estimate,
-      'Inkludert i estimatet':price.included.join('\n'),
+      Arbeid:inquiry.rooms.map(function(r){return r.type+': '+r.area+' m²'}).concat(['', 'Inkludert:'],price.included).join('\n'),
       Underlag:conditions[inquiry.condition]||'Må avklares',
       Materialer:[materialStatus[inquiry.material.status],inquiry.material.name,inquiry.material.link].filter(Boolean).join('\n'),
-      'Beskjed fra kunden':inquiry.description||'Ingen ekstra beskjed',
-      'Mottatt fra skjema':inquiry.createdAt,
-      'Referanse':String(inquiry.id),
-      'Til vurdering':'Uforpliktende forespørsel. Kunden er ikke lovet en jobb eller oppstart. Vurder adresse og kjøretid manuelt (inntil 90 minutter fra Vikersund). Kalkulatoren bruker foreløpige priser; endelig pris, materialer, kjøring og eventuell mva. må avklares.'
+      Beskjed:inquiry.description||'Ingen ekstra beskjed fra kunden.',
+      Oppfølging:'Vil du tilby jobben? Åpne tilbudsverktøyet, fyll inn kundens opplysninger og din endelige pris, og lag et tilbud: '+new URL('tilbud.html',root.location.href).href+'\nDu kan også trykke Svar i denne e-posten for å avklare detaljer med kunden.',
+      Referanse:String(inquiry.id)+' · '+received+' (norsk tid)',
+      Merknad:'Uforpliktende forespørsel. Kontroller adresse/kjøretid, omfang og endelig pris. Nettestimatet bruker foreløpige priser; materialer, kjøring og eventuell mva. må avklares.',
+      email:inquiry.email
     };
   }
+
   function send(inquiry,price,photos){
     var total=0;
     for(var i=0;i<photos.length;i++){total+=photos[i].size;if(!/^image\//.test(photos[i].type))throw new Error('Legg bare ved bildefiler. Fjern andre filtyper før du sender.')}
