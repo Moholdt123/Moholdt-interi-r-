@@ -77,6 +77,7 @@
     if(!(floor||trim))document.querySelector('input[name="opt_pickup"]').checked=false;
     document.getElementById('pickupNote').hidden=!optionChecked('opt_pickup');
     document.getElementById('shopFloorLink').hidden=!floor;
+    document.getElementById('floorUnderlayReminder').hidden=!floor;
     document.getElementById('shopTrimLink').hidden=!trim;
     document.getElementById('shopTrimLink').style.display=trim?'block':'none';
     document.getElementById('materialLinkLabel').textContent=floor&&!trim?'Legg inn lenke til gulvet her':trim&&!floor?'Legg inn lenke til listene her':'Legg inn produktlenke her';
