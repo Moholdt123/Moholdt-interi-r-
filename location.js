@@ -15,6 +15,8 @@
     if(addresses.some(function(a){return String(a.kommunenummer)==='0301'||String(a.kommunenavn||'').trim().toUpperCase()==='OSLO'}))return 'oslo';
     var points=addresses.filter(function(a){return a.representasjonspunkt&&Number.isFinite(a.representasjonspunkt.lat)&&Number.isFinite(a.representasjonspunkt.lon)});
     if(!points.length)return 'unknown';
+    // Additional service area explicitly approved by the owner: 3533 Tyristrand.
+    if(points.every(function(a){return String(a.postnummer)==='3533'&&String(a.poststed||'').trim().toUpperCase()==='TYRISTRAND'}))return 'local';
     // All returned address samples must be local before showing green.
     if(points.every(function(a){return a.kommunenavn==='MODUM'}))return 'local';
     // Very distant areas only; the band below 180 km remains subject to manual review.
